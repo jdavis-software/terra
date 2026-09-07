@@ -1,99 +1,106 @@
-# Reference analysis and reconstruction strategy
+# Recording-based reference analysis — Terra v2
 
-Planning date: 2026-09-06, America/Los_Angeles.
+## Scope correction
 
-## 1. Evidence boundary
+The uploaded recording changes the product definition. The reference is a cinematic, two-part narrative about Earth history and human civilization. It is **not** the Earth observatory and solar-tilt laboratory proposed before the video was available. The v1 TR-001–TR-087 roadmap is superseded; implement the v2 TE-001–TE-072 roadmap instead.
 
-The requested references are:
+The new visual evidence comes from Jordan's uploaded `Screen Recording 2026-09-06 at 10.07.01 PM.mov` (the original filename has a narrow no-break space before PM). File metadata: 83.281792 seconds, 2940 × 1912 pixels, H.264 video at a reported 60 fps, AAC audio, 348,351,663 bytes. SHA-256: `d914fc281e92e6366f23b617236e9a03a4bfdbe48d02e2dbda53aad4ed8964b7`. See `reference/recording-manifest.json`.
 
-- Original post: https://x.com/akshdeeps_001/status/2096776530005488028
-- Video view: https://x.com/akshdeeps_001/status/2096776530005488028/video/1
-- Destination repository: https://github.com/jdavis-software/terra
+Review method: decoded video frames sampled across the recording at four-second and one-second intervals, contact-sheet inspection, and enlarged individual screens/text regions. Approximate timestamps below are **upload-relative**, not the original X player's timeline. This is a visual recording analysis; audio was not transcribed, and no original app DOM, network traffic, source code, or comment thread was inspected. The reported recording frame rate does not establish the application's frame rate.
 
-**The video and post contents were not retrievable in the planning environment. No frames, audio, transcript, duration, title, controls, linked application URL, or original source code were inspected.** A claim of full frame-by-frame reverse engineering would therefore be false. This document supplies an evidence-aware implementation proposal and a concrete procedure for closing that gap.
+The original references remain:
+- https://x.com/akshdeeps_001/status/2096776530005488028
+- https://x.com/akshdeeps_001/status/2096776530005488028/video/1
 
-The user's description is an Earth simulator suitable as inspiration for a visually impressive GitHub portfolio project. It does not establish whether the source is an orbital globe, procedural planet, terrain explorer, climate sandbox, destruction simulator, or another subtype. The baseline below deliberately chooses an orbital Earth observatory with a sunlight lab; it must not be presented as the source video's verified feature set.
+Raw recording and extracted frames are review material, not authorized public runtime assets. Do not commit the 348 MB recording, desktop chrome, X controls, or recording-toolbar imagery to this public repository. Textual observations and asset-independent implementation specifications are sufficient for the public plan.
 
-## 2. Access log
+## 1. What is now established
 
-| Attempt | Result | What may be concluded |
+| Evidence ID | Observation | Evidence / confidence |
 | --- | --- | --- |
-| Direct X post and video through the web reader | Fetch errors | No post or video content verified |
-| Exact post ID and author/topic searches | No usable match for this video | No verified metadata or feature inventory |
-| Public embed/syndication and alternative reader endpoints | Access/fetch failures | No usable media URL or frames recovered |
-| Container-side public metadata requests | Host resolution failures | No downloaded video or metadata |
-| Connector search for an applicable X reader | No matching plugin returned | No available alternate connector resolved access |
-| GitHub connector repository metadata and contents | Public repo, `main`, writable, initially empty | Terra could be initialized without replacing application code |
+| R01 | A small `earth.` wordmark, centered The Planet / Civilization navigation, Sources at upper right | Clearly visible throughout |
+| R02 | Near-black full-screen stage; large light-weight sans-serif headline and paragraph on the left; large globe behind/right; date at upper right | Opening and all narrative states |
+| R03 | The Planet starts at present day and offers a journey into deep time | Approximately 00:01–00:13 |
+| R04 | Ten labeled geological anchors, irregular real-time gaps but approximately equal screen spacing | Enlarged opening timeline |
+| R05 | Deep-time surface appearance changes: incandescent early globe, water/land, ice, changed continental arrangements, Pangea-like assembly and separation | Approximately 00:13–00:26 |
+| R06 | Headline, numeric age and globe appearance change together during playback | Same interval; some text is visibly crossfading |
+| R07 | Natural / After dark / Blue hour controls appear in Planet mode; visibly different lighting states occur | Opening approximately 00:01–00:12 |
+| R08 | Civilization has an introduction, then 18 numbered chapter positions and a current/total counter | Approximately 00:26–00:79 |
+| R09 | Civilization changes camera focus between continents and sites; location labels and subtle overlays are visible | Human chapter sequence |
+| R10 | A lower-right human-footprint card distinguishes expanding story regions from earlier sites and explicitly disclaims borders/population density | Enlarged chapter screen at approximately 00:38.5 |
+| R11 | Playback affordances appear both in the narrative area and near the lower-right stage; 5× is visible | Human journey and Planet playback |
+| R12 | Civilization shows Natural / After dark controls, prev/next, All chapters and Behind the story | Human chapter screens; panels themselves not opened |
+| R13 | Modern finale uses Earth-at-night imagery with city lights | Approximately 00:77–00:79 |
+| R14 | Source video-player and operating-system capture overlays obscure the very end | Approximately 00:80–00:83; exclude from app spec |
 
-Failed access is not evidence that the post is deleted, private, fake, or lacks a playable video. Do not infer any of those things.
+An on-screen control establishes that the control is present, not that every possible click path was tested. The recording demonstrates selected paths; it is not an interactive browser audit.
 
-## 3. Evidence ledger
+## 2. Chronological recording inventory
 
-| ID | Claim | Classification | Confidence / action |
-| --- | --- | --- | --- |
-| E-01 | Jordan wants a fun Earth-simulator portfolio project | User-described | High; direct request |
-| E-02 | The two X URLs identify the intended reference | User-supplied identifier | High; content unavailable |
-| E-03 | Terra was an empty public repository with write access | Connector-observed | High at planning time |
-| E-04 | The source uses Three.js, React, WebGPU, or any named engine | Unknown | Must not be asserted |
-| E-05 | The video contains time controls, city lights, clouds, lab sliders, or particular panels | Unknown | Must not be asserted |
-| E-06 | Terra should use those features as a cohesive proposed baseline | Proposed design | Intentional product decision |
-| E-07 | NASA and graphics-library documentation provide viable research starting points | Documented sources | Specific asset downloads and compatibility still require implementation checks |
-
-## 4. What can and cannot be reverse engineered from a video
-
-Once the video is accessible, screen composition, visual transitions, control labels, pointer behavior, displayed values, apparent camera paths, loading states, and recording dimensions can be observed. Rendering techniques can be hypothesized from those observations, but multiple techniques can produce the same image.
-
-A video alone generally does not prove the source framework, shader code, physics fidelity, data freshness, device performance, backend architecture, or whether an interaction was edited out. Report those as unknown unless corroborated by a linked app, published source, or an explicit author statement. Smooth playback is not an FPS benchmark.
-
-## 5. Proposed visual/technical decomposition
-
-Everything in this section is a Terra design proposal, **not an observed feature**.
-
-| Proposed visual or interaction | Implementation mechanism | Proof required |
+| Approximate upload time | Visible state | Reconstruction requirement |
 | --- | --- | --- |
-| Recognizable high-detail Earth | Sphere with licensed equirectangular surface textures, controlled shading | Landmarks align with coordinates; no mirrored map or visible seam |
-| Moving day/night boundary | Earth-fixed surface normals dotted with a time-derived Sun vector | Inspector altitude agrees with rendered illumination |
-| Nighttime city lights | Historical night-emission texture, suppressed on sunlit side | Lights fade at the terminator, not through daytime oceans |
-| Convincing blue limb | Separate atmosphere material with restrained view-angle and sunlight weighting | No neon outline or halo detached from the planet |
-| Moving cloud layer | Separate shell and deterministic, explicitly artistic texture advection | Depth order, seam, sunlight and repeatability verified |
-| Smooth orbit and place navigation | Constrained camera orbit and cancellable direction interpolation | No through-Earth path or fighting camera controllers |
-| Educational seasons | Separate simplified lab state driving solar declination | Zero tilt removes seasonal declination variation |
-| Screenshot-worthy tour | Data-driven camera/time/layer keyframes | Same inputs give the same poses; user input interrupts |
-| Useful instrument panel | Real scene state, coordinates, solar altitude, provenance | No invented global statistics or decorative live feeds |
+| 00:01–00:04 | Present-day Africa/Europe; intro, Now, ten-anchor rail | Opening composition, legible typography, full globe and explicit story CTA |
+| 00:04–00:12 | Camera orientation changes; globe illumination differs; lighting-selector states visible | Orbitable globe and three Planet appearance modes; exact input implementation unknown |
+| 00:13.5 | Early Earth, hot crust/lava; age around 4.48 Ga | Distinct emissive early-Earth material, not a red tint on present-day geography |
+| 00:14.5 | Ocean emergence, around 4.2 Ga | Conceptual cooling/water transition |
+| 00:15.5 | Atmosphere/life chapter, around 2.76 Ga while traveling | Separate age interpolation and narrative state; transitional frames are not scientific date evidence |
+| 00:16.5–00:17.5 | Large ice cover; later clearly the deep-freeze chapter around 600 Ma | Distinct ice material/mask and explanatory uncertainty |
+| 00:18.5 | Ancient seas, around 525 Ma | A historical continental arrangement, not modern continents with a recolor |
+| 00:19.5–00:20.5 | Continental convergence, around 439–351 Ma | Observable land-configuration progression |
+| 00:21.5 | Pangea-like world, around 282 Ma | Recognizable joined landmass / surrounding ocean |
+| 00:22.5–00:23.5 | Breakup, around 214–150 Ma | Transition to separated continental masses |
+| 00:24.5 | Expanding oceans, around 83 Ma | Later reconstruction intermediate |
+| 00:25.5 | Near-present world, around 20 Ma | Smooth return toward present geography |
+| 00:26.5–00:28.5 | Civilization introductory screen, approximately 300,000 years ago | Intro is distinct from numbered chapter 01 |
+| 00:29.5–00:31.5 | Chapter 01, Africa | Human origin chapter and broad, explicitly illustrative region |
+| 00:32.5–00:34 | Chapter 02, White Sands | Camera moves to North America |
+| 00:35.5–00:36.5 | Chapter 03, cultivation/settlement | Southwest Asia focus, multiple-origin caveat |
+| 00:37.5–00:39.5 | Chapter 04, Uruk | Mesopotamia site label |
+| 00:40.5–00:42.5 | Chapter 05, Giza | Egypt focus |
+| 00:43.5–00:45.5 | Chapter 06, Mohenjo-daro | Indus focus |
+| 00:46.5–00:47.5 | Chapter 07, exchange across East/Central Asia | Illustrative route network, not one exact Silk Road |
+| 00:48.5–00:50.5 | Chapter 08, Teotihuacan | Central Mexico focus |
+| 00:51.5–00:53.5 | Chapter 09, Cahokia | Mississippi Valley focus |
+| 00:54.5–00:56.5 | Chapter 10, Polynesian navigation | Pacific camera orientation and island/route cues |
+| 00:57.5–00:59.5 | Chapter 11, northern China / Ming-era walls | East Asia focus |
+| 00:60.5–00:62 | Chapter 12, Machu Picchu | Andes focus |
+| 00:63.5–00:64.5 | Chapter 13, Timbuktu | West Africa focus |
+| 00:65.5–00:67.5 | Chapter 14, Atlantic contact in 1492 | Atlantic view with historical context, not an empty-world narrative |
+| 00:68.5–00:70.5 | Chapter 15, Philadelphia 1776 | Eastern North America; equality/slavery/exclusion context |
+| 00:71.5–00:73 | Chapter 16, industrial transformation / Ironbridge | Britain focus |
+| 00:74.5–00:76 | Chapter 17, Pearl Street 1882 | Local electrical-lighting story, not instant global electrification |
+| 00:77–00:79 | Chapter 18, present-day night Earth | Deliberate city-lights finale |
+| 00:80–00:83 | End-of-video and capture overlays | Not Terra controls; do not reproduce |
 
-## 6. Reference acquisition task — TR-001
+These are representative observation windows, not millisecond-accurate edit boundaries. The deep-time numeric ages are sampled playback values, not replacement dates for the ten canonical rail anchors. All 18 chapter subjects and ten rail anchors are specified in `STORY_CONTENT.md`.
 
-Try the supplied public post in the implementation environment's browser and inspect any accessible author-linked demo. Do not spend an entire milestone repeatedly retrying inaccessible endpoints. If it remains blocked, record that fact and continue against this proposed baseline. An accessible user-supplied video is the preferred way to close the visual gap; lack of it is not permission to invent observations.
+## 3. Grok prompt: what it gets right and what needs correction
 
-When media is obtained, record its origin, duration, dimensions, acquisition date, and SHA-256. Keep the raw video outside public Git history unless redistribution is authorized. Use screenshots only as allowed by their rights; an internal reference ledger can cite timestamps without republishing the frames.
+| Prompt claim | Recording result / decision |
+| --- | --- |
+| Two main sections, cinematic globe, left narrative, bottom timeline | Supported; this becomes the actual core |
+| Natural / After dark / Blue hour everywhere | Three options visible in Planet; only Natural / After dark visible in Civilization. Keep that distinction |
+| Continuous chronology | Planet is continuous **piecewise story time**; Civilization uses 18 chapter stops with overlapping date ranges. Do not use one linear 4.54-billion-year slider for both |
+| Some example human chapters | Correct but incomplete; the recording has 18, including White Sands, cultivation, Giza, Silk Roads, Teotihuacan, Polynesia, northern Chinese walls, Timbuktu and industrialization |
+| Globe morphs through continental drift | Appearance/land configuration changes are visible. The clip does not prove vertex morphing, plate simulation, texture blending or the source algorithm |
+| Three.js / React Three Fiber | Sensible Terra implementation choice; original stack is still unverified. Jordan reports Three.js comments, but comments were not supplied in this upload |
+| Depth of field | Not established. Keep the core globe sharp; defer DOF rather than adding blur on assumption |
+| Buttery 60 fps | Target for Terra on measured hardware, not a measured property of the source. A 60-fps recording is not a benchmark |
+| Sources and chapter navigation | Links/buttons visible; their destination/panel design is unobserved. Specify useful original implementations |
+| Atmospheric/lighting changes | Visually supported; physical realism of the original is not established |
 
-Inspect the opening, every material interaction/state transition, the midpoint, and ending. For a short clip, sample every 2–3 seconds plus every UI interaction. Record actual timestamps, not a prewritten imagined timeline. Compare adjacent frames before claiming animation mechanics. Listen to audio if it contains implementation claims; distinguish author statements from verified behavior.
+## 4. Visual implementation hypotheses
 
-Use this ledger structure:
+A sphere with aligned color/emission/data textures can explain the modern globe. A separate shell can explain the thin blue limb; another shell/material can explain clouds. A directed surface light and masked ocean highlight can explain the specular response. A sequence of paleogeographic textures or reconstructed geometry can explain changing land. Camera direction interpolation can explain the geographic flyovers. DOM overlays can explain sharp type and fixed controls.
 
-| Frame/time | Visible composition | Interaction and before/after state | Text actually readable | Proposed mechanism | Confidence | Terra task mapping |
-| --- | --- | --- | --- | --- | --- | --- |
-| Pending accessible media | — | — | — | — | Unverified | TR-001 |
+These are **reconstruction hypotheses**, not recovered source code. Terra chooses a Three.js/R3F implementation because it fits these requirements. No framework, shader, hidden feature, exact font family, backend, or original data license can be identified from the recording alone.
 
-Do not fill the table with guessed observations.
+## 5. Important things not to copy accidentally
 
-## 7. If a linked live app becomes available
+Do not rebuild X's video controls or the macOS recording UI. Do not make modern cities glow in prehistoric chapters. Do not label illustrative footprints as population or political borders. Do not infer a first city, first farmer, single origin point for humanity, or exact ancient coastline from cinematic imagery. Do not silently transform a broad historical date range into a precise date for animation. Do not bring the superseded solar-lab dashboard into this minimal storytelling interface.
 
-Inspect its DOM, network requests, public assets, and interactions using ordinary authorized browser access. Record observable technology hints and their strength. A package name in a downloaded bundle is stronger evidence than visual resemblance. Do not bypass access controls, extract secrets, or copy unlicensed code/assets.
+## 6. Result and remaining limits
 
-Check initial loading, orbit/zoom limits, all visible controls, narrow-screen behavior, keyboard access, error states, and asset provenance. Capture comparisons at equal aspect ratios. Record differences between the video and app; the video may show an older build.
+The visual reference gap is now substantially closed: the supplied recording has been inspected and decomposed into a feature inventory, 28 authored story anchors/chapters and implementable state/rendering contracts. **Original source-code analysis, live-app interaction verification, comment-based technology confirmation, mobile behavior, precise original easing/durations and original asset provenance remain unknown.** Terra implementation and visual comparison against the reference have not happened yet.
 
-## 8. Fidelity decision after inspection
-
-Classify each difference as: baseline cosmetic adjustment, missing core interaction, proposed Terra enhancement, unavailable/unsupported source feature, or intentionally excluded scope. Update `DECISIONS.md` before changing required architecture. Visual adjustments may proceed within the baseline; a wholesale switch to a terrain or destruction simulator is a material scope change and must be clearly surfaced rather than quietly absorbed.
-
-There are two separate release claims:
-
-1. **Terra baseline complete:** the proposed product meets its own specification and tests.
-2. **Reference fidelity verified:** actual inspected reference states were compared and the differences documented.
-
-The first can pass while the second remains unresolved. Never merge them into a blanket claim that the original was reproduced.
-
-## 9. Portfolio differentiation
-
-The intended value is not copying a viral clip. Terra should demonstrate original engineering decisions: a coherent coordinate system, separation of visual effects from numerical models, deterministic scene reproduction, GPU-aware asset management, robust input behavior, and a documented quality process. The public README should explain those choices using real screenshots and measured results after implementation.
+A release may claim an independently built, recording-inspired reconstruction after its tests pass. It must not claim the original source was recovered, its hidden controls were verified, or its scientific models were reproduced exactly.

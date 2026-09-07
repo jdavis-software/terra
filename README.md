@@ -1,80 +1,80 @@
-# Terra
+# terra.
 
-### A cinematic Earth observatory and educational sunlight sandbox.
+### One planet. Billions of years. Countless human stories.
 
-Terra is a portfolio project for **Jordan Davis**: an interactive, browser-based Earth experience designed to demonstrate graphics engineering, thoughtful interaction design, reproducible simulation, accessibility, and performance discipline.
+Terra is a cinematic, interactive Earth-history experience planned for **Jordan Davis's GitHub portfolio**. Explore a changing planet across deep time, then follow eighteen human stories across its surface—from African origins to the illuminated modern world.
 
-**Status: planning complete for the proposed Terra baseline; application not implemented.** The original X video could not be retrieved during planning. Its exact appearance, behavior, implementation stack, and feature set have **not** been verified. This repository contains an executable build specification, not a claim of source-code or frame-by-frame reverse engineering.
+**Current status: recording analyzed and implementation plan published; application not yet implemented.** The active roadmap contains **72 core tasks in nine epics**, with no application tasks verified complete. There is no claimed live deployment or measured performance result yet.
 
-## The intended experience
+## The experience
 
-Open directly into a beautifully rendered Earth. Orbit from sunlit oceans to illuminated cities, scrub time to move the day/night boundary, inspect places, and explore an explicitly labeled educational lab for axial tilt and seasonal sunlight. Finish with shareable scenes and an interruptible cinematic tour.
+**The Planet** opens with today's Earth and travels through ten story anchors: formation, early oceans, atmospheric change, extensive ice, ancient seas, converging continents, Pangea, continental breakup, widening oceans and the present. A story-paced timeline controls the globe, age and narrative together.
 
-The product should feel like an observatory, not a dashboard with a globe bolted on. It must remain useful without accounts, paid APIs, external live feeds, or an AI service at runtime.
+**Civilization** opens with a separate introduction, then visits eighteen authored chapters with geographic camera transitions, subtle illustrative regions/routes, contextual sources and a modern Earth-at-night finale. Its numbered chapter rail is not a linear calendar scale.
+
+The interface stays minimal: an enormous globe, elegant narrative text, a contextual date, two navigation sections and a bottom timeline. Orbit, scrub, pause, change speed, jump chapters and inspect sources. No account, backend, paid API or AI service is required at runtime.
 
 ## Build with ASTRA
 
-Read [AGENTS.md](AGENTS.md), then use the complete prompt in [docs/ASTRA_GOAL.md](docs/ASTRA_GOAL.md).
+Read [AGENTS.md](AGENTS.md), then use the complete execution prompt in [docs/ASTRA_GOAL.md](docs/ASTRA_GOAL.md).
 
 ```text
-/goal Build Terra according to AGENTS.md and docs/ASTRA_GOAL.md.
-Implement the 62 core tasks in docs/ROADMAP.md in dependency order,
-verify the functional and visual acceptance gates, and maintain
-an honest evidence trail in docs/PROGRESS.md. Treat the X video
-as unverified until actually inspected. Do not implement optional
-extensions until the core release passes.
+/goal Build Terra using AGENTS.md and docs/ASTRA_GOAL.md.
+Execute the recording-based TE-001–TE-072 roadmap in docs/ROADMAP.md.
+Deliver all ten Planet anchors and eighteen Civilization chapters,
+verify the actual browser experience against the reference, and keep
+real implementation/test/deployment evidence in docs/PROGRESS.md.
+Do not implement the superseded observatory or sunlight-lab plan.
 ```
 
-The full goal file includes execution rules, scope boundaries, verification requirements, and completion criteria. Commands described in the specification are **future implementation contracts**, not commands that work in this planning-only repository yet.
+The documentation's `pnpm` commands are implementation contracts, not commands that already work in this planning-only repository. Exact compatible dependency versions and production assets must be verified during bootstrap.
 
-## Planning documents
+## Start here
 
-| Document | Purpose |
+| Document | What it contains |
 | --- | --- |
-| [Documentation index](docs/README.md) | Reading order and specification precedence |
-| [Reference analysis](docs/REFERENCE_ANALYSIS.md) | Evidence ledger, access limitations, reconstruction strategy |
-| [Product specification](docs/PRODUCT_SPEC.md) | Core experience, behavior, scope, user journeys |
-| [Visual specification](docs/VISUAL_SPEC.md) | Layout, tokens, camera composition, visual acceptance targets |
-| [Architecture](docs/ARCHITECTURE.md) | Stack, module ownership, data flow, rendering and state contracts |
-| [Simulation specification](docs/SIMULATION_SPEC.md) | Coordinates, clocks, Sun direction, lab model, numerical tests |
-| [Assets and sources](docs/ASSETS_AND_SOURCES.md) | Primary references, asset provenance, acquisition and licensing checks |
-| [Implementation roadmap](docs/ROADMAP.md) | 62 core tasks, 8 optional tasks, dependencies and acceptance tests |
-| [QA and release](docs/QA_AND_RELEASE.md) | Browser tests, performance budgets, deployment and release gates |
-| [ASTRA goal](docs/ASTRA_GOAL.md) | Copy-ready autonomous implementation prompt |
-| [Decisions](docs/DECISIONS.md) | Chosen defaults, alternatives and conditions for changing course |
-| [Progress](docs/PROGRESS.md) | Current implementation status, evidence and handoff ledger |
+| [Recording analysis](docs/REFERENCE_ANALYSIS.md) | Timestamped observations, screen anatomy, evidence limits and comparison with the supplied Grok prompt |
+| [Detailed tasklist](docs/ROADMAP.md) | All 72 tasks, dependencies, intended files, acceptance criteria and verification |
+| [Story catalogue](docs/STORY_CONTENT.md) | Ten geological anchors and all eighteen human chapters, with source-review requirements |
+| [ASTRA goal](docs/ASTRA_GOAL.md) | Complete copy-ready implementation instructions |
+| [Visual specification](docs/VISUAL_SPEC.md) | Recording-based composition, typography, lighting, controls and responsive direction |
+| [Architecture](docs/ARCHITECTURE.md) | Module ownership, state/data flow, shaders, camera and asset lifecycle |
+| [Story engine contracts](docs/SIMULATION_SPEC.md) | Piecewise time, chapter dates, coordinates, cancellation and asynchronous scene consistency |
+| [Quality and release](docs/QA_AND_RELEASE.md) | Full browser/visual/numerical/content/asset acceptance gates |
+| [Progress](docs/PROGRESS.md) | What is actually done, what remains and how evidence is recorded |
 
-## Proposed stack
+[All documentation](docs/README.md) includes asset provenance, decisions and the issue map.
 
-React + TypeScript + Vite, Three.js with React Three Fiber, narrowly scoped Drei helpers, Zustand for low-frequency application state, Astronomy Engine behind an adapter, Vitest, and Playwright. WebGL2 is the baseline; WebGPU is an optional later experiment. Exact compatible versions must be verified and pinned during bootstrap.
+## Roadmap
 
-A static build is the deployment target. GitHub Pages under `/terra/` is the planned default; provider configuration and a successful public deployment are not claimed by this planning repository.
-
-## Roadmap at a glance
-
-| Milestone | Core tasks | Exit result |
+| Epic | Tasks | Result |
 | --- | --- | --- |
-| M0 — Evidence and feasibility | TR-001–TR-006 | Honest reference status, viable assets and locked contracts |
-| M1 — Working vertical slice | TR-010–TR-017 | A real, navigable Earth in the browser |
-| M2 — Cinematic Earth rendering | TR-020–TR-027 | Day/night, clouds, atmosphere and texture quality |
-| M3 — Time and sunlight simulation | TR-030–TR-037 | Correct clock, solar direction and educational lab |
-| M4 — Exploration and inspection | TR-040–TR-047 | Search, picking, camera transitions and useful readouts |
-| M5 — Showcase interactions | TR-050–TR-057 | Tour, photo mode, scene sharing and polished controls |
-| M6 — Hardening | TR-060–TR-067 | Performance, accessibility and robust failure handling |
-| M7 — Verification and portfolio release | TR-070–TR-077 | Tested build, real media, documented deployment and release |
+| M0 — Evidence and feasibility | TE-001–TE-008 | Correct scope, viable assets and stable contracts |
+| M1 — Real opening slice | TE-009–TE-016 | The actual editorial shell and a navigable Earth |
+| M2 — Cinematic renderer | TE-017–TE-024 | Materials, atmosphere, appearance presets and resource ownership |
+| M3 — The Planet | TE-025–TE-032 | Ten geological anchors and changing land configurations |
+| M4 — Civilization | TE-033–TE-040 | Eighteen sourced chapters, camera paths and illustrative overlays |
+| M5 — Integrated interactions | TE-041–TE-048 | Playback, timelines, chapters, sources and cancellation all work together |
+| M6 — Hardening | TE-049–TE-056 | Responsive layouts, accessibility, resilience and measured optimization |
+| M7 — Verification | TE-057–TE-064 | All story states, visual comparisons, stress tests and release-candidate checks |
+| M8 — Portfolio release | TE-065–TE-072 | Real media, case study, CI, credits and verified deployment |
 
-Optional work TR-080–TR-087 is not part of the core completion gate. See the roadmap for exact dependencies and definitions of done.
+## Proposed implementation
 
-## Inspiration and attribution
+React + strict TypeScript + Vite; Three.js through React Three Fiber; small low-frequency state store; a pure narrative engine; CSS-based accessible controls; Vitest and Playwright. Static deployment under `/terra/` is the default target.
 
-The user supplied [this X post](https://x.com/akshdeeps_001/status/2096776530005488028) and [its video link](https://x.com/akshdeeps_001/status/2096776530005488028/video/1) as inspiration. Credit the reference author without implying collaboration, affiliation, permission to reuse assets, or that Terra is the original project.
+Ancient geography is the central engineering challenge. The plan uses independently permitted, model-informed offline masks/intermediates for supported periods, with clearly labeled conceptual early Earth. The runtime does not pretend that blending masks is a physical plate-tectonics solver. Modern city lights appear only in present-day contexts; the 1882 chapter is a localized historical scene.
 
-Candidate Earth imagery comes from NASA collections, subject to item-specific credit and usage checks. Historical image composites must never be labeled as live Earth imagery. Third-party assets retain their own terms. See [asset provenance requirements](docs/ASSETS_AND_SOURCES.md).
+## Inspiration and scope correction
 
-## Scientific honesty
+Jordan supplied [this X post](https://x.com/akshdeeps_001/status/2096776530005488028) and [its video](https://x.com/akshdeeps_001/status/2096776530005488028/video/1), followed by an 83.28-second screen recording. The recording was visually inspected and revealed the two-part narrative experience described above.
 
-Terra is an interactive visualization and educational sunlight model, **not** a climate predictor, weather forecast, geodetic survey, navigation system, or validated orbital mission tool. The lab deliberately changes simplified parameters; its results must be labeled accordingly. Artistic atmosphere and cloud effects do not constitute atmospheric physics.
+An earlier speculative plan proposed an observatory and sunlight lab before the recording was available. **That plan is superseded.** Old TR task IDs remain in Git history, not in the active implementation scope.
 
-## License
+The original project's source code, exact framework, font identity, unrecorded panel behavior and mobile implementation were not inspected. Three.js/R3F is Terra's chosen stack, not a verified claim about the original. Terra uses its own branding and original prose, with inspiration credit but no claim of affiliation or permission to reuse the creator's source/assets.
 
-The proposed license for original application code is MIT, to be finalized during implementation. No license grant over third-party imagery, reference videos, or other external assets is implied. This planning commit does not add a `LICENSE` file.
+## Sources, interpretation and rights
+
+Earth imagery and reconstruction data need item-specific terms, credits, observation periods and reproducible derivation records. Historical satellite composites are not live imagery. Footprints/routes are illustrative story geography, not population density or political borders. Deep-time scenes are not a climate forecast or an exact reconstruction of every ancient coastline.
+
+The raw reference recording and extracted source frames are not committed or used as runtime assets. Original-code licensing will be finalized during implementation; third-party imagery, models, fonts and icons retain their own terms. See [assets and sources](docs/ASSETS_AND_SOURCES.md).

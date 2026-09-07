@@ -1,42 +1,32 @@
-# Terra documentation map
+# Terra documentation — active v2
 
-## Current state
+The current project is a recording-inspired cinematic Earth/history website: **ten Planet anchors and eighteen Civilization chapters**. The earlier observatory/sunlight-lab plan is retired. Active task IDs are **TE-001–TE-072**. The app is not implemented by this planning revision.
 
-This is an implementation-ready **proposal** for Terra, not a finished application or verified reconstruction of the source video. The user supplied the Earth-simulator description and reference links. Direct video inspection and source implementation identification remain unresolved.
+## Reading order
 
-## Reading routes
+For implementation: [AGENTS](../AGENTS.md) → [ASTRA goal](ASTRA_GOAL.md) → [recording analysis](REFERENCE_ANALYSIS.md) → [product](PRODUCT_SPEC.md) / [visuals](VISUAL_SPEC.md) / [story catalogue](STORY_CONTENT.md) → [story engine](SIMULATION_SPEC.md) / [architecture](ARCHITECTURE.md) / [assets](ASSETS_AND_SOURCES.md) → [roadmap](ROADMAP.md) / [QA](QA_AND_RELEASE.md) → [progress](PROGRESS.md).
 
-**ASTRA implementation:** `../AGENTS.md` → `ASTRA_GOAL.md` → `REFERENCE_ANALYSIS.md` → `PRODUCT_SPEC.md` → `VISUAL_SPEC.md` → `ARCHITECTURE.md` → `SIMULATION_SPEC.md` → `ROADMAP.md` → `QA_AND_RELEASE.md`.
-
-**Portfolio reviewer:** `../README.md` → `PRODUCT_SPEC.md` → `ARCHITECTURE.md` → `PROGRESS.md`. Once the app exists, actual media and a verified deployment should appear in the root README.
-
-**Asset work:** `ASSETS_AND_SOURCES.md` is authoritative for provenance and acquisition. A candidate source is not an acquired asset.
-
-## Source of truth
-
-| Concern | Canonical document |
+| Concern | Source of truth |
 | --- | --- |
-| User intent, known evidence, unknown reference details | `REFERENCE_ANALYSIS.md` |
-| Required product behavior and exclusions | `PRODUCT_SPEC.md` |
-| Art direction, screen composition, interaction presentation | `VISUAL_SPEC.md` |
-| Technical boundaries and module/API ownership | `ARCHITECTURE.md` |
-| Coordinates, units, time, physical interpretation | `SIMULATION_SPEC.md` |
-| Task IDs, dependencies, deliverables, task acceptance | `ROADMAP.md` |
-| Cross-cutting quality gates and release process | `QA_AND_RELEASE.md` |
-| Changes to defaults and why they were made | `DECISIONS.md` |
-| Actual progress and verification evidence | `PROGRESS.md` |
+| Actual visible source evidence and unknowns | [REFERENCE_ANALYSIS.md](REFERENCE_ANALYSIS.md) |
+| Recording identity, metadata and inspection limits | [reference/recording-manifest.json](reference/recording-manifest.json) |
+| Required screens and interaction outcomes | [PRODUCT_SPEC.md](PRODUCT_SPEC.md) |
+| Composition, typography, globe presentation and visual gates | [VISUAL_SPEC.md](VISUAL_SPEC.md) |
+| Ten geological and eighteen human records | [STORY_CONTENT.md](STORY_CONTENT.md) |
+| Coordinates, narrative time, date conventions and state invariants | [SIMULATION_SPEC.md](SIMULATION_SPEC.md) |
+| Stack, module boundaries and resource ownership | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Acquisition, model limits, licensing and provenance | [ASSETS_AND_SOURCES.md](ASSETS_AND_SOURCES.md) |
+| Canonical task IDs/dependencies/acceptance | [ROADMAP.md](ROADMAP.md) |
+| Cross-cutting tests, performance and release gates | [QA_AND_RELEASE.md](QA_AND_RELEASE.md) |
+| Why defaults changed and when to reconsider them | [DECISIONS.md](DECISIONS.md) |
+| Actual implementation and verification status | [PROGRESS.md](PROGRESS.md) |
 
-## Vocabulary
+`ASTRA_REFERENCE_FIRST_GOAL.md` is a compatibility entry point to the current goal. `REFERENCE_RECONSTRUCTION_TASKS.md` records residual source unknowns; it is no longer an instruction to keep retrying an inaccessible X video.
 
-- **Reference-observed:** actually visible in an inspected source frame, with a timestamp or frame ID.
-- **User-described:** supplied by Jordan but not independently verified.
-- **Proposed:** chosen for Terra; not attributed to the reference.
-- **Derived:** calculated from a documented model or dataset.
-- **Artistic:** deliberately adjusted for presentation, not a scientific result.
-- **Historical composite:** imagery assembled from observations in a stated period; never live.
-- **Core:** the 62 tasks in M0–M7.
-- **Extension:** one of TR-080–TR-087; excluded from the initial `/goal` completion gate.
+## Precedence and evidence vocabulary
 
-## Change discipline
+User requirements and honest source representation come first. Product scope and the story catalogue define the required experience; numerical/state contracts define correct behavior; the visual specification defines presentation; the roadmap defines execution. Resolve material conflicts in DECISIONS.md and update tests together rather than silently adding a second behavior.
 
-Update the affected specification, record the decision, and update task acceptance and tests together. Do not let an issue body or an implementation comment silently supersede the coordinate system, scope boundaries, or honesty rules. Never mark progress complete just because the corresponding plan exists.
+**Observed** means visible in an inspected recording frame/window. **Demonstrated** means a before/after interaction is visible, not that the live application was exhaustively tested. **Proposed** means Terra's implementation choice. **Conceptual** and **model-informed** distinguish artistic early Earth from bounded reconstruction data. **Verified complete** requires actual implementation and test evidence, not just a written specification.
+
+The source's typography family, source code, exact algorithms, comments and unrecorded mobile/panel behavior remain unknown. Keep those limits distinct from the now-completed visual recording review.

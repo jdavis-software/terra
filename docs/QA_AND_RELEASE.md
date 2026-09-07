@@ -1,119 +1,136 @@
-# Quality assurance and release contract
+# Terra v2 verification and release contract
 
-## 1. Status
+## Status and evidence policy
 
-These are implementation requirements, not completed test results. The planning repository has no application, test suite, media capture or deployment yet. Every measured claim must be filled from an actual run.
+This document specifies future implementation tests. No application, test suite, measured frame rate, production asset set or deployment has been completed by the planning revision. The supplied recording was visually analyzed; source-code identity and unrecorded live-app behavior remain unverified.
 
-Two independent outcomes must be reported: compliance with the proposed Terra specification, and fidelity to the original X video. The latter remains unverified until the actual video is inspected and compared.
+Record actual outputs against a commit. A checkbox, mock screenshot, conceptual shader description or successful TypeScript build is not evidence that the site works. Do not disable tests, fabricate logs, enlarge screenshot thresholds without explanation or label a software-rendering CI run a real-device GPU benchmark.
 
-## 2. Script contract
+## 1. Required commands
 
-| Command | Required behavior |
+| Script | Required work |
 | --- | --- |
-| `pnpm dev` | Local development server with documented URL/base |
-| `pnpm build` | Production static build; fail on build errors |
-| `pnpm preview` | Serve the real built output for manual/browser verification |
-| `pnpm lint` | Real source linting; no success stub |
-| `pnpm typecheck` | Strict TypeScript validation without emitting app output |
-| `pnpm test:unit` | Deterministic nonwatch unit/integration suite |
-| `pnpm test:e2e` | Playwright against a production preview; meaningful failure exit |
-| `pnpm assets:verify` | Verify local files, metadata, hashes, dimensions and required credits |
-| `pnpm docs:check` | Verify local documentation links, task references and counts; external links checked separately |
-| `pnpm check` | Lint, typecheck, unit tests, assets, docs and build; fail fast |
+| `pnpm dev` | Local application server, documented host/port |
+| `pnpm build` | Real strict production build with configurable base |
+| `pnpm preview` | Inspect the built output; not an asserted production hosting service |
+| `pnpm lint` / `pnpm typecheck` | Actual lint and strict type checks |
+| `pnpm test:unit` | Pure/component tests with deterministic clock/fixtures |
+| `pnpm test:e2e` | Playwright against the production build |
+| `pnpm test:visual` | Controlled visual regression fixtures and diagnostic artifacts |
+| `pnpm assets:verify` | Local file, hash, dimensions, purpose, rights, credit and model metadata checks |
+| `pnpm content:verify` | Ten/18 IDs, required prose, reviewed claims, structured dates, coordinates and source references |
+| `pnpm docs:check` | Internal path/link checks and absence of stale active-plan contradictions |
+| `pnpm check` | Fail-fast lint/type/unit/content/assets/docs/build; browser suites run in explicit configured jobs |
 
-Do not claim these commands work until they exist and have run. Pin the runtime/package manager and one dependency lockfile. A clean clone must not need a private service, global `.codex` changes or undocumented environment variables.
+No command may be an `echo passed` substitute. Negative validator fixtures must prove failures are detected. Offline validators verify recorded source metadata/local integrity; network link checks are a separate bounded audit so an intermittent publisher outage does not masquerade as invalid local content.
 
-## 3. Unit and numerical acceptance matrix
+## 2. Deterministic fixture contract
 
-| Test family | Required cases | Expected result |
+Each visual fixture pins section, anchor/chapter ID, story position, camera pose, appearance, overlays, quality, viewport, DPR, random seed, browser/OS and renderer information. Freeze presentation noise/cloud phase where needed. Wait for the **requested scene revision's** assets to decode/upload and render, not simply network-idle or canvas-mounted.
+
+Expose test-only readiness instrumentation behind a build/test gate. Do not ship a public debug API that can fetch arbitrary URLs or mutate internal state. A missed ready signal is a failing test, not permission to capture whatever previous chapter happens to remain visible.
+
+Maintain snapshots on a controlled renderer/environment. Different GPUs/drivers can render small differences; record appropriate tolerances with review. Visual snapshots detect regression, while direct recording-to-render comparison establishes fidelity. These are different jobs.
+
+## 3. Required pure-function cases
+
+| Family | Cases and invariants |
+| --- | --- |
+| Coordinates | Greenwich/90°E/90°W/poles; ordinary round trips; date-line wrapping; singular pole handling; nonfinite rejection |
+| Geological mapping | All ten exact anchors; inverse mapping; random p/age round trips; descending brackets; p=0/1; positive age never mislabeled Today |
+| Chapter chronology | Exactly eighteen unique authored records plus unnumbered intro; overlapping range dates retain authored order; BCE/CE formatting has no accidental year zero |
+| Clock | Same elapsed monotonic time under 30/60/144Hz schedules; pause zero advance; continuous speed changes; seek re-anchor; bounds clamp; hidden intervals excluded |
+| State transitions | Intro/start/end/replay; section bookmark restoration; unsupported appearance normalization; modal/manual-input pause; no unexpected resume |
+| Overlays | Same chapter produces same set independent of navigation history; future sites disappear on rewind; current/earlier toggles independent |
+| Emission | P01–P09 and C01–C17 cannot enable global modern lights; C17 only local effect; P10 exact Today and C18 can enable modern emission |
+| Camera | Nearly identical/antipodal directions; poles/date line; positive safe radius; immediate cancellation; one owner |
+| Async assets | Latest revision wins; old completion cannot change display; buffer stops effective clock; retry recovery; bounded cache and release ownership |
+| Scene URL | Valid round trips; known IDs only; bounded finite numbers; oversized/malformed/unknown-version inputs recover; no executable/remote-resource values |
+
+Expected values must come from independent simple fixtures or derivations, not another invocation of the implementation under test. Random/property tests need recorded seeds for reproduction.
+
+## 4. Required browser journeys
+
+**B01 Opening:** fresh profile opens present-day Planet intro, Natural mode, correct Africa/Europe framing, ten rail anchors and no unsolicited playback. Preview imagery loads under the production base.
+
+**B02 Complete Planet:** start at formation; reach all ten anchors by play, click and keyboard; scrub forward/backward through each interval. Numeric age, narrative ID, asset state and rail agree. Pangea and breakup are visibly different land configurations.
+
+**B03 Complete Civilization:** switch to intro; start chapter 01; traverse all eighteen; assert exact current/total count, recorded order, date label, camera subject and overlay set. Intro must not produce 19 entries.
+
+**B04 Transport coherence:** both visible play/pause controls agree; all three speeds preserve continuity; end clamps; replay resets as specified. Camera travel at 5× does not overlap multiple owners.
+
+**B05 Input arbitration:** stage wheel, rail drag, globe orbit, plus/minus zoom and touch pinch each have one effect. Panel scrolling and browser zoom remain usable. Manual input cancels automation before applying input.
+
+**B06 Panels:** All chapters reaches every item; Sources and contextual explanations have real data/links; opening pauses, closing stays paused; focus returns predictably. Long text/date labels do not overflow.
+
+**B07 Rewind correctness:** from modern night Earth seek to C17, C04, P07 and P01. No future markers or global lights remain. Toggle After dark in every premodern state to verify the policy cannot be bypassed.
+
+**B08 Race conditions:** rapidly seek among formation, Pangea, present, Pacific chapter and night finale while artificially delaying assets. The latest state wins, text/date cannot silently describe stale geography, and retry/buffering are truthful.
+
+**B09 Visibility/motion:** hide/restore the page during play, open/close panels, change reduced-motion preference mid-flight. No hidden-time jump or surprise resume occurs; all story content remains accessible.
+
+**B10 URL/static host:** copy a scene link to a clean profile; refresh at root and `/terra/`; test malformed links and denied clipboard. All local assets/transcoders use correct base paths.
+
+**B11 Resilience:** fail an image, reject a decode, simulate no WebGL and context loss/restoration. No blank permanent canvas, fake success or infinite spinner; fallback story and source access remain available.
+
+**B12 Lifecycle:** after warm-up, run twenty cycles of sections/chapters/qualities and inspect renderer/texture/listener/worker counts. Distinguish a bounded cache from a genuine leak using ownership records and repeated final-state measurements.
+
+## 5. Visual comparison fixtures
+
+Use source upload-relative timestamps as orientation, not exact scripted camera constants. Exclude X playback chrome and macOS recording controls. The source's 2940×1912 pixel dimensions do not establish CSS viewport/DPR. Match aspect ratio and document any crop before comparing proportions.
+
+| Fixture | Reference direction | Primary visual checks |
 | --- | --- | --- |
-| Coordinates | Anchor axes, 1,000 seeded random points, date line, near poles, invalid/zero vectors | Correct sign/orientation; nonpolar round-trip ≤1e−8° |
-| UV mapping | Canonical seam/north orientation and landmark mapping | No mirror/flip; documented seam duplication |
-| Clock | 1×/60×/3600×, pause/seek/speed/visibility, date bounds | Continuous, frame-schedule independent; hidden time excluded |
-| Solar provider | Documented independent fixtures across seasons/leap day/year bounds | Display error ≤0.25° and additional interpolation error <0.05° |
-| Solar readouts | Subsolar/antipodal/terminator points, category edges | Dot-product-consistent altitude and exact tested boundary rules |
-| Apparent solar time | Subsolar noon, opposite midnight, wrap and poles | Correct 0–24h cycle; undefined-pole behavior |
-| Lab model | 0°/23.44°/60° tilt, four season angles, duration/phase changes | Declination/phase invariants and no hidden UTC mutation |
-| Daily curve | Equator, both poles, continuous day/night, long/short solar day | 361 finite samples in [0,1], endpoints equal, honest time axis |
-| Camera math | Parallel/antipodal directions, near poles, min/max radius | Safe path outside Earth and deterministic cancellation |
-| State | Presets, mode restoration, URL/local precedence and reset | No stale/cross-mode state corruption |
-| Serialization | Round trip, unknown version, >8KiB, nonfinite, bad ID/date/URL | Reject safely and retain usable default |
-| Asset manifest | Missing file/hash/credit, wrong dimensions, pending status | Fail release validation with actionable errors |
+| V01 | Present-day opening, ~00:01–00:04 | Huge globe right; clean left headline; Now upper right; ten-stop rail; mint CTA |
+| V02 | Modern After dark, opening variation | Coherent dark-side appearance and restrained historical city lights |
+| V03 | Blue hour, opening variation | Deliberate artistic lighting change without changing age/geography |
+| V04 | Formation, ~00:13.5 | Dark crust/lava rather than recolored modern continents |
+| V05 | Oceans, ~00:14.5 | Clear cooling/water transition, coherent material |
+| V06 | Ice, ~00:17.5 | Extensive ice, readable rim, no UI-white overlay |
+| V07 | Pangea, ~00:21.5 | Recognizable joined land configuration and stable shader seams |
+| V08 | Breakup, ~00:22.5–00:23.5 | Different land arrangement and no obvious translucent duplicate continents |
+| V09 | Civilization intro, ~00:26.5 | Larger globe, parchment CTA, intro not counted as chapter |
+| V10 | Africa, ~00:29.5 | Broad origin framing and restrained illustrative footprint |
+| V11 | Uruk, ~00:38.5 | Correct regional camera/label, count/18, functional footprint card |
+| V12 | Indus, ~00:44.5 | Geographic subject, date wrapping and stable narrative hierarchy |
+| V13 | Pacific, ~00:55.5 | Wide ocean framing, restrained illustrative island/network cues |
+| V14 | Andes, ~00:61.5 | Correct western South America view and label occlusion |
+| V15 | West Africa, ~00:63.5 | Timbuktu-region framing, no accidental Europe default camera |
+| V16 | Local electrical light, ~00:74.5 | Localized site effect, no modern global city emission |
+| V17 | Modern finale, ~00:77.5 | Fine night-light pattern, purposeful pullback and final chapter state |
 
-Fixtures must have origin, conventions, date and tolerance. Do not derive both expected and actual values from the same function and call that independent verification. Property/invariant tests complement but do not replace independent solar fixtures.
+For every major family, record at least five concrete comparisons across composition, type scale, globe framing, geography, appearance, date, CTA, rail, overlay density or spacing. Fix material errors before accepting regression baselines. Intentional differences include original Terra branding/prose, source/chapters panel design and mobile behavior; they do not excuse a generic dashboard or missing states.
 
-## 4. End-to-end journeys
+## 6. Responsive and accessibility matrix
 
-**E2E-01 First visit:** load `/terra/` with a clean profile, wait for actual scene readiness, assert visible textured Earth/nonblank pixels, orbit/zoom/reset, open Help and Credits. Fail on uncaught errors, shader compile/link errors or required-asset failures.
+Minimum viewports: 1440×900, 1280×800, 390×844 and 360×800; add wide desktop and phone landscape. Test 200% text zoom, long historical ranges, keyboard-only navigation, reduced motion, touch input, visible focus, readable contrast and panel scrolling.
 
-**E2E-02 Explore:** search a named place, navigate, verify selection and inspector, click a new surface point, drag without accidental selection and test empty space. Confirm no far-side marker bleed.
+Required meaningful non-canvas path: chapter/anchor navigation, narrative/date/source text, playback control and explanation of the visual scene. A canvas accessible name alone does not make the history usable. Modal focus handling must allow exit and restore focus. Do not globally disable page pinch/scroll simply to simplify globe controls.
 
-**E2E-03 Time:** play, change speed without jump, pause, scrub, enter UTC date, cross midnight, use Now, reset, hide/show the tab. Compare readouts and lighting to the same expected state.
+Browsers: actual available Chromium and Firefox, Playwright WebKit, and real Safari/iOS where available. Record versions and platform limitations. A Playwright WebKit pass is not a claimed test on Jordan's iPhone. Unavailable real-device coverage remains visible in the release report.
 
-**E2E-04 Lab:** enter with a selected place, change tilt/season/day duration, check the chart and label, switch presets, leave and verify Earth restoration. Invalid parameter input is rejected.
+## 7. Performance targets and measurement
 
-**E2E-05 Showcase:** start/pause/resume/cancel tour, interrupt with wheel and keyboard, restore state, enter/exit photo mode via keyboard and touch, export and inspect an actual nonblank image.
+Targets are engineering goals, not current results. On a named representative laptop at medium quality, target smooth approximately 60-fps interaction; use average >=55 fps and p95 rAF frame interval <=25ms as initial diagnostic thresholds over at least 30 seconds after warm-up. On a named mobile device, target >=30 fps and p95 interval <=50ms. Report screen refresh rate, browser/OS, DPR, viewport, power mode, build commit and workload. rAF timing measures presented frame cadence, not GPU execution time.
 
-**E2E-06 Share/storage:** copy scene, open in a fresh context, compare serialized values, deny clipboard, corrupt URL/storage, test oversized payload and reset only Terra settings.
+Target initial medium cold transfer <=5 MB and initial JavaScript gzip <=900 KiB where feasible. Measure with cache disabled and a documented network profile. Aim for an interactive low-resolution Earth within three seconds on a stated realistic test connection; report actual results rather than promising universal load time. Lazy-load historical neighbors and secondary panels without making the source drawer unusable offline after initial content load.
 
-**E2E-07 Keyboard/mobile:** complete the first-session journey without a pointer, then repeat primary paths with mobile touch emulation. Check modal focus and 200% text zoom.
+Estimated active texture budget: <=128 MiB low/medium, <=256 MiB high, with a bounded current/neighbor cache. Record representation and mip estimates plus render-target/resource counts. No total GPU-memory API is assumed. Check ordinary-image fallback costs as well as compressed paths. A 4K RGBA8 texture with mipmaps is roughly 42.7 MiB, so loading twenty of them at once fails the intended design.
 
-**E2E-08 Failures:** block a required texture, fail a high-tier optional texture/decoder, disable storage, force unsupported WebGL and context loss/recovery. Every state remains informative and recoverable.
+Use React profiling and browser performance tools to identify per-frame rerenders, allocations, long tasks and decode/upload stalls. Repeat before/after the optimization. Never claim the recording's reported 60 fps proves the original or Terra performance.
 
-Run production-base tests under `/terra/`, not only `/`. No arbitrary sleeps in place of readiness or stable-state checks. A test seam may expose diagnostics in development/test builds, but production must not expose arbitrary state mutation or remote-asset loading. Prefer normal UI and validated scene URLs for tests. A simple read-only readiness marker is acceptable in production.
+## 8. Scientific, historical and asset release gate
 
-## 5. Visual test contract
+Ten Planet records and eighteen Civilization records must have reviewed prose and exact supporting source IDs. Source metadata includes publisher, title, URL, access date and claim coverage. Approximate/century/range dates stay qualified. Camera coordinates have a source, and broad-region narratives do not become falsely precise origin pins.
 
-Required captures: default Blue Marble, Night Lights, Terminator, selected place/inspector, lab with curve, mobile inspector, mobile lab, photo mode, loading error, WebGL fallback. Use fixed time, seed, paused motion, camera, quality and DPR. Wait for texture upload, shader compilation and a completed render before capturing.
+All runtime assets have verified local hashes, dimensions, interpretation, rights/credits and transform recipes. Model assets identify age, layer type and reference frame. Conceptual early Earth is not labeled reconstructed; mask blending is not called plate physics; historical night imagery is not live; footprints are not population/border data. Modern geography in the human story is identified as reference geography rather than a detailed 300,000-year paleoclimate map.
 
-Primary dimensions: 1440×900 and 390×844. Secondary: 1280×800, 1920×1080, 360×800 and a phone landscape layout. Record OS/browser/GPU or software-renderer status. Browser screenshots can vary across rendering environments; keep controlled baselines and defensible tolerances, not one unexplained global threshold.
+Separate original-code license from image/model/font terms. The creator's public video is inspiration, not permission to copy their source or distribute the user's recording. No private screenshots, credentials or source-video chrome belong in runtime assets or README media.
 
-Visually inspect every initial baseline. Compare the selected design/baseline and actual application, including at least: globe size/composition, continent alignment, terminator/lighting, atmospheric limb, typography, panel spacing, icon treatment, focus state and mobile overflow. Fix material defects before accepting baseline updates.
+## 9. CI, deployment and final gate
 
-Playwright's documentation describes screenshot comparisons and environment considerations: https://playwright.dev/docs/test-snapshots . A green screenshot diff against a poor initial image is not evidence of good design.
+CI runs meaningful checks on the target commit, with safe bounded artifacts for failures. Build and browser suites operate on `dist`, not only the development server. Configure root versus `/terra/` explicitly and verify texture/transcoder paths, scene hashes and refreshes. Review current official workflow guidance and pin appropriate action versions during implementation.
 
-## 6. Performance budgets — targets, not current results
+The Pages workflow and actual public deployment are separate tasks. Only publish a live-demo claim after loading the real deployed URL and checking both journeys, asset requests, scene sharing and sources. When configuration permissions are unavailable, record the exact blocker; a generated `dist` is useful but is not a deployed site.
 
-Use a production build, stable 60-second scenario, 5-second warm-up, no devtools capture overhead during final measurement, and at least three runs. Report median and p95 frame interval along with long-task/interaction observations. Record refresh rate where known. Headless software rendering is useful for correctness smoke tests, not proof of laptop/mobile GPU speed.
-
-| Dimension | Initial target | Measurement conditions |
-| --- | --- | --- |
-| Desktop medium | Median frame interval ≤18.2ms; p95 ≤33.3ms | Recorded real desktop/laptop, 1440×900, medium, normal refresh |
-| Mobile low | Median frame interval ≤33.3ms; p95 ≤50ms | Recorded real mobile device, portrait, low |
-| First meaningful Earth | ≤6 seconds | Cold load, 10Mbps down / 100ms latency; actual textured preview, not just spinner |
-| Initial compressed JS | ≤900 KiB | Sum of required initial JS chunks, gzip-equivalent method recorded |
-| Initial transferred assets | ≤4 MiB | Required initial scene assets before optional upgrades; exclude later high tier |
-| Estimated active textures | ≤128 MiB low/medium; ≤256 MiB high | Include actual fallback representation/mipmaps; state estimation method |
-| Steady interaction | No repeated >100ms main-thread stalls during orbit/scrub | Profile representative controls, not only idle scene |
-| Resource stability | No monotonic growth after warm-up over 20 tier/remount cycles | Count geometries/textures/programs/workers; explain caches |
-| Idle behavior | No unnecessary continuous frames when all motion is paused | Demand rendering and explicit invalidation |
-
-These are engineering targets chosen for Terra, not capabilities already demonstrated. If they fail, identify the bottleneck and fix or document a justified budget revision in `DECISIONS.md` with before/after evidence. Do not silently lower quality or remove required features to disguise failure.
-
-A screenshot pass cannot establish these budgets. An estimated texture footprint is not a total GPU-memory measurement. If target hardware is unavailable, state exactly which tests remain unverified; do not invent devices or benchmark numbers.
-
-## 7. Accessibility and compatibility
-
-Keyboard access must cover navigation, manual coordinate entry, search, time, lab, share, tour exit, photo exit and help. Dialogs require focus management and restoration. Inputs need visible labels; controls need readable focus states and meaningful accessible names. Charts require text/table equivalents. Announce selection/error changes sparingly, not every numerical frame update.
-
-Respect reduced motion and user quality settings. Text and focus contrast must be checked against the actual selected tokens. Touch targets should be at least 44px where practical. Never disable browser zoom globally.
-
-Compatibility target: current stable Chromium, Firefox and Safari, plus representative iOS/Android browsers. Record exact versions tested. Playwright WebKit is not identical to a real Safari/iPhone hardware run. Narrow support claims honestly when a device/browser has not been verified.
-
-## 8. Security and supply-chain checks
-
-No runtime secrets or mandatory external inference. No arbitrary remote assets from URL state. No `eval`/expression execution for lab parameters. Bound JSON input and validate all numbers. Use minimal Actions permissions, trusted deployment events and reviewed action versions. Do not run privileged deployment workflows against untrusted fork code.
-
-Verify actual runtime requests and dependencies. Preserve third-party notices and asset terms. Avoid shipping large raw media, personal paths, private test data or credentials in traces/screenshots. A static app still needs this audit.
-
-## 9. Deployment acceptance
-
-`dist` must run with both the documented Pages base `/terra/` and a root base when rebuilt for another host. Use the configured base for textures, decoder files, posters and icons. Prefer hash scene state rather than routes requiring server rewrites. Verify deep-link refresh and corrupt hash handling.
-
-A deployment is complete only when the actual public URL loads in a browser, the required assets return successfully, a scene link reproduces state and a deploy/workflow identifier is recorded. Do not create a fictional Pages URL or present a local preview as deployed. If settings/permissions prevent publication, mark deployment blocked and provide the build/runbook as partial completion.
-
-## 10. Release evidence packet
-
-The implementation release should include: exact dependency/runtime versions; command results; unit/ephemeris fixture provenance; browser/device matrix; performance measurements with conditions; selected visual baselines and mismatch ledger; source/asset credits; real screenshots/demo clip; known limitations; verified public URL or explicit blocked deployment status.
-
-The root README must explain what is actually implemented and link the case study. Proposed/optional features remain labeled. Do not add build/coverage/performance badges unless they point to real evidence. Maintain the distinction between Terra-spec completion and unverified source-video parity.
+Release cannot pass with a missing chapter, dead primary control, mirrored geography, fake drift, premodern global lights, unstable camera, stale scene race, unreadable primary content, missing asset rights or fabricated evidence. Curated actual screenshots/demo and a truthful engineering README complete the portfolio handoff. Retain an honest checklist of remaining lesser limitations rather than erasing them at release.

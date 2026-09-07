@@ -1,100 +1,73 @@
-# Product specification
+# Terra v2 — product specification
 
-## 1. Product definition
+## Mission
 
-**Terra is a cinematic Earth observatory with an educational sunlight sandbox.** It runs as a static client application, opens directly into an interactive planet, and needs no account or service key. This is the chosen Terra baseline, not a verified description of the X reference.
+Build a beautiful single-page, browser-based story of Earth and human civilization for Jordan Davis's GitHub portfolio. The uploaded screen recording is the visual/behavioral reference. Terra uses its own `terra.` wordmark and original narrative copy while preserving the recognizable experience: two top-level journeys, oversized globe, left-side storytelling, upper-right date and bottom narrative timeline.
 
-Primary audience: people browsing Jordan's GitHub portfolio, engineering hiring teams, and curious visitors. The first interaction should be obvious; deeper controls should reward exploration without burying the planet under panels.
+This specification supersedes the unverified v1 observatory/sunlight-lab proposal. Core scope is now ten geological anchors and eighteen human chapters, not a UTC sunlight sandbox. No authentication, backend, database, paid runtime APIs, AI inference, weather feed or governance infrastructure is needed.
 
-Product priorities, in order: striking first impression; responsive real interactions; coherent simulation; readable interface; reliable cross-device operation; concise engineering story. More overlays are not inherently better.
+## Core screens
 
-## 2. Required first-session journey
+### The Planet
 
-The initial showcase preset loads a readable Earth with deliberate lighting, a short interaction hint and visible simulation time. The visitor drags to orbit, zooms, searches for a place, sees it selected with useful sunlight readouts, plays or scrubs time, switches to the lab, changes axial tilt, and launches a cinematic tour or copies a scene URL. All of those actions must alter real application state.
+A first visit opens the present-day introduction, paused, Africa/Europe visible, Natural lighting, clean black stage. The header contains terra., The Planet, Civilization and Sources. The left narrative contains a small contextual label, large original headline, short paragraph, `Go back in time` and `Read the record`. The upper-right date is Now. The bottom rail contains the ten exact anchors in STORY_CONTENT.md. A visible instruction distinguishes time travel from orbiting.
 
-A fresh visit starts from the curated showcase, not an unpredictable persisted camera buried inside Earth. Apply explicit URL state first; otherwise use the showcase. Persist accessibility and quality preferences only. Offer a separate action to restore a locally saved scene.
+`Go back in time` sets the chronology to P01 and starts playback unless reduced motion is active, in which case it selects P01 paused. `Play the story` starts from the current story position; from the present-day introduction/completed end it starts P01. Pause freezes story progression without resetting it. `Back to today` selects P10, stops story playback and returns to the present-day intro. Manual scrubbing selects time and pauses playback.
 
-## 3. Functional requirements
+The globe changes through conceptual formation, oceans/atmosphere, an ice state, ancient geography, continental assembly/breakup and present Earth. Numeric age is continuous through the piecewise timeline. Story copy changes at defined chapter thresholds. Raw time scale is **not linear** across 4.54 billion years. Show a quiet note that the rail is paced for the story, not proportionally spaced years.
 
-| ID | Requirement | Core definition of done |
-| --- | --- | --- |
-| FR-01 | Cinematic Earth | Textured Earth, ocean response, historical city lights, clouds, restrained atmosphere, decorative star field, working orbit/zoom |
-| FR-02 | Time controls | Play/pause, speeds 1×/60×/3600×, UTC date/time input, one-day scrubber, Now and reset; all use one clock |
-| FR-03 | Place exploration | Bundled curated search, click selection, keyboard selection, fly-to, back-face marker occlusion |
-| FR-04 | Location inspector | Latitude/longitude, geometric solar altitude, day/twilight/night category, local apparent solar time, model/source notes |
-| FR-05 | Sunlight lab | Explicitly simulated mode; axial tilt, season angle, solar-day duration, phase controls and normalized sunlight curve |
-| FR-06 | Layers | Cloud, atmosphere, night-lights, graticule and place-marker toggles; restore defaults; meaningful state |
-| FR-07 | Presentation | User-started cinematic tour, photo mode, quality selection, scene sharing, presets, help |
-| FR-08 | Accessibility and resilience | Keyboard alternatives, reduced motion, mobile layout, loading/failure states, WebGL fallback, no focus traps |
-| FR-09 | Reproducibility | Validated versioned scene URLs, deterministic presets, reset, fixed test clock/seed and scene-ready signal |
-| FR-10 | Portfolio release | Build/test scripts, verified static-path behavior, original demo media, architecture documentation and truthful status |
+Lighting controls: Natural, After dark, Blue hour. They change presentation, not historical time. Artificial city emission is forbidden for prehuman deep-time states. An early-Earth night view may show intrinsic lava emission. Blue hour is an artistic preset, not an astronomical claim.
 
-## 4. Screen anatomy
+### Civilization
 
-A compact top bar contains Terra, mode switch, preset chooser, tour/photo actions and an overflow menu. The central stage is the primary surface. A narrow left rail opens Explore, Layers and Settings; a right inspector opens only after selection. A bottom timeline displays the authoritative clock and playback controls. Help and Credits are real dialogs, not decorative icons.
+First entry presents an unnumbered introduction. Starting the journey selects chapter 01. The main experience has exactly eighteen numbered stops, current/total counter, previous/next buttons, All chapters, an upper-right approximate/range date and left story. Reuse the same renderer but change camera choreography, globe scale, narrative color accent and overlay mode.
 
-Do not add a marketing landing page before the simulator. Do not add pricing, testimonials, login, analytics cards, or unexplained global counters. The GitHub README is the primary project explanation; the app is the demonstration.
+Each chapter has an explicit authored order, data-bound location/region, original headline/body, camera preset, appearance intent and source references. Dates are not evenly spaced and ranges overlap. Do not sort records by historical year or interpolate a fabricated precise year between broad century ranges. Chapter 18 is the city-lights finale. Chapter 17 is localized Pearl Street lighting, not the global night map.
 
-On mobile, replace side panels with mutually exclusive bottom sheets. Keep at least half the stage visible when possible. A sheet must not block the only way to pause a moving scene. Respect safe-area insets and browser chrome changes.
+The lower-right human-footprint card has two real toggles: current story regions and earlier story sites. Its limitation identifies these as illustrative, not borders/population density. Current points/regions can pulse gently; earlier sites are dim. Rewinding removes future features. The basic human geography is modern reference geography, clearly distinguished from the deep-time reconstruction layer.
 
-## 5. Earth mode
+Civilization has Natural and After dark only, matching the visible reference. Before C18, After dark darkens the natural Earth but does not enable modern global urban lights. This explicit Terra safety rule fills unobserved source-control behavior rather than claiming it was tested in the video.
 
-### Initial state
+### Contextual panels
 
-Default to `2026-09-06T12:00:00.000Z`, paused, a camera centered roughly over 15°N/15°E at distance 4 Earth radii, Earth mode, medium quality, clouds/atmosphere/night lights on and graticule/markers off. This is a clearly labeled showcase time, not a claim that imagery was acquired then. `Now` uses the device clock and switches to 1× playback; it does not turn historical imagery into live imagery.
+All chapters opens an accessible list of all eighteen chapters with date, region and active state. Selection closes the panel, goes to that chapter paused and starts the appropriate camera transition. Sources opens a readable source browser with Story, Imagery and Reconstruction sections. Read the record/Behind the story opens the active chapter's explanation, limitations and citations. The recording shows these affordances, not their open panels; their detailed layouts are original Terra completions.
 
-### Clock behavior
+Opening a panel pauses the story and animated camera; closing it stays paused. External references open as ordinary clearly identified links. Never hide a running timeline behind a modal.
 
-Play advances the current epoch; pause freezes it. Speed changes preserve continuity. Scrubbing pauses playback during the drag, previews the selected time and remains paused after release. The scrubber covers the UTC day containing the selected epoch. Crossing midnight through playback updates the day rather than snapping backward. Invalid dates are rejected without corrupting the last valid scene. Restrict the supported UI date range to 2000-01-01 through 2100-12-31 and document it as a Terra product limit, not the astronomy library's limit.
+## Interaction contracts
 
-When the tab becomes hidden, pause and stop visual animation. On return, remain paused and explain briefly that playback was paused while hidden; do not advance by a large background delta. This is a simulation timeline, not a continuously synchronized live clock.
+| Input | Required action |
+| --- | --- |
+| Drag on globe | Orbit; manual input pauses story and cancels camera automation before applying input |
+| Timeline drag | Capture pointer, scrub deterministically, remain paused after release; no camera orbit from the same gesture |
+| Desktop wheel on unobstructed stage | Time travel in Planet; debounced next/previous chapter in Civilization; do not also zoom |
+| Plus/minus controls | Controlled camera zoom; bounded distance, keyboard equivalents |
+| Optional modified wheel | Not core; preserve browser zoom shortcuts rather than intercepting Ctrl/Cmd-wheel |
+| Touch | One-finger orbit; explicit timeline scrub; two-finger pinch within stage for camera zoom; page/panel scrolling outside stage |
+| Play/Pause in either visible location | One authoritative transport state, never two timers |
+| Speed | Implement 1×, 2×, 5×; only 5× is visibly confirmed in the reference, others are Terra choices |
+| Tab switch | Cancel in-flight transitions; preserve section bookmark; enter target intro or restore bookmark paused |
+| Previous/next | One chapter, clamped at ends; no hidden wraparound |
+| Escape | Close active panel/fullscreen/presentation surface as applicable; never trap the user |
+| Reset view | Restore the active chapter's camera, not all content preferences |
+| Document hidden | Pause/re-anchor story and presentation clocks; remain paused on return |
 
-### Scientific labels
+Do not steal the page's wheel/touch events when a panel, text field or menu owns them. Provide visible keyboard equivalents. A static screenshot is not an acceptable substitute for a live globe.
 
-Earth mode computes the Sun's apparent direction through the documented ephemeris adapter. The spherical surface, exaggerated atmospheric shell, artistic cloud motion and historical image composites are simplifications. Show `Geometric solar altitude` rather than promising observed sunrise or refraction-corrected altitude. Do not display temperature, cloud forecast, population, orbital altitude, or environmental measurements without a real source/model.
+## State priorities
 
-## 6. Location inspection
+Explicit valid URL state wins; otherwise use the present-day Planet intro. Persist quality/reduced-motion preferences independently. Per-section bookmarks exist during the session; restoring a saved story from storage is explicit. A shared scene opens paused. No automatic tour on first load.
 
-Bundle at least 24 named places covering all hemispheres and important edge cases; include a polar site, a date-line site, an equatorial site, and near-antipodal pairs. Each record needs an ID, display name, latitude, longitude and provenance. Store only what is used. Avoid a full country database unless it serves a required interaction.
+There is one scene projection derived from section, story position, view mode and user camera state. Date, headline, active rail item, overlays and textures cannot be driven by unrelated timers. An asset still loading must not allow a new date to describe an old world silently; enter a clear loading/buffering state or use an era-correct lower-resolution preview.
 
-Search is local, case-insensitive and tolerant of diacritics. Support arrows/Enter/Escape, clear and no-results states. A selected named place retains its name. A surface click elsewhere is labeled `Selected point`, never automatically called the nearest city. Clicking empty space clears a point selection only if no camera drag occurred. Pointer movement beyond a 6 CSS-pixel threshold counts as a drag.
+## Portfolio additions included after reference core
 
-The inspector uses the same scene Sun vector as the material. Local apparent solar time is not a civil time zone and must be labeled. At a mathematical pole, longitude-derived local solar time is undefined and should display an explanatory dash. Geometric day/twilight classification excludes refraction and must not be marketed as a precise sunrise service.
+Versioned scene links, quality selection, an accessible fallback story reader and real project/demo media are supporting release features, not observations attributed to the source. Keep them in overflow or documentation instead of changing the primary composition. A custom photo/video editor, shader control panel and generic place-search dashboard are not core.
 
-## 7. Sunlight lab
+## Out of scope
 
-The lab is a separate hypothetical mode. Entering it stores the last Earth state; exiting restores that state without silently changing its UTC time. The lab displays `Educational simulation — not a climate forecast` persistently.
+The v1 axial-tilt lab, solar ephemeris/UTC timeline, daily sunlight curves, location-inspector dashboard, satellite tracking, terrain landing, climate prediction, live global weather, population-density simulation, destruction modes, AI chat, audio narration, WebGPU rewrite and billing/accounts are excluded. Do not import infrastructure from DriftGate or AvatarOps. Accurate full Earth history is not claimed: pre-reconstruction periods are conceptual, historical dates are qualified, and footprint overlays are illustrative.
 
-Controls:
+## Definition of product complete
 
-| Control | Range/default | Observable effect |
-| --- | --- | --- |
-| Axial tilt | 0°–60°; 23.44° default | Changes the relationship between season and solar declination |
-| Season angle | 0°–360°; 90° default | 0° northward equinox, 90° northern summer, 180° southward equinox, 270° southern summer |
-| Solar day duration | 0.5–96 simulated hours; 24 default | Changes how quickly the subsolar longitude completes a cycle |
-| Day phase | 0%–100% | Moves the hypothetical Sun around the fixed planet |
-| Reset lab | One action | Restores all defaults and clears modified-state indicator |
-
-The season angle is held fixed while a lab day plays; this is a daily sunlight experiment, not a full orbital/climate model. Derive the selected location's normalized direct sunlight curve over one lab solar day from the same Sun geometry. Label its vertical axis `Relative direct sunlight (0–1)`, never watts, temperature or energy production. A longer day changes the duration axis, not the curve's normalized noon intensity by itself.
-
-Include three explanatory presets: `No seasons` (0° tilt), `Earth-like tilt` (23.44°), and `Extreme tilt` (60°). The label Earth-like describes one parameter, not a validated complete Earth model.
-
-## 8. Showcase behavior
-
-Tour: explicit start, 35–50 seconds, four coherent scenes, deterministic camera/time/layer state, concise optional captions, pause/resume/exit. User pointer, wheel, keyboard camera input or reduced-motion preference cancels or prevents automated camera motion. Never fight the user's input. Restore the pre-tour state on exit; `Keep this view` may explicitly retain the current state.
-
-Photo mode: hide chrome, retain a visible/focusable Exit control, support Escape and touch exit. Export a canvas-only PNG when available; say that UI panels are not included. Handle browser capture failure honestly. Keep attribution accessible in the app and attach provenance in the accompanying export metadata or filename/readme convention.
-
-Scene sharing: copy a URL that encodes versioned, bounded scene parameters and opens paused. No arbitrary asset URLs, executable expressions, external fetch URLs or user identifiers. A clipboard denial must expose a selectable link. Full scene equality means serialized camera, time/lab parameters and layers; device quality preferences remain local unless a test fixture explicitly pins them.
-
-Presets: `Blue Marble`, `Night Lights`, `Terminator`, and `Polar Day` for Earth; three lab presets above. Each has a stable ID, explicit time, camera and layers. Names such as Polar Day require numerical validation of the chosen latitude/time.
-
-## 9. Core exclusions
-
-No climate or fluid solver, sea-level damage prediction, plate tectonics, live global weather, terrain landing, destruction effects, multiplayer, AI chat, satellite fleet, lunar eclipses, high-precision geodesy, or planetary formation in the core release. Those are materially different engineering projects. Select extensions only after the core experience is demonstrably finished.
-
-No sound is necessary. Do not add autoplay audio. No tracking or analytics are required. No visitor location permission is needed for the core product.
-
-## 10. Product acceptance
-
-A reviewer must be able to follow the first-session journey without reading the README. Every visible primary control must work. Keyboard-only users must have meaningful equivalents to pointer exploration. A missing asset cannot trap the app behind an infinite spinner. A scene link must reproduce the intended state on a clean browser profile. The README must distinguish planned features from implemented ones until each is verified.
+A visitor can explore today's Earth, play/scrub all ten geological anchors, switch into Civilization, traverse all eighteen chapters, pause/change speed, manually orbit, inspect sources, jump chapters, rewind without future data leaking, and use the same core story on mobile or with a keyboard. Visual comparisons against recording checkpoints and actual browser tests must pass. A planning document, a modern globe alone, or a linear timeline with five sample chapters is not completion.

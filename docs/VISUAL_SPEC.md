@@ -1,94 +1,77 @@
-# Visual and interaction specification
+# Terra v2 — visual specification from the recording
 
-## Status and direction
+## Visual thesis
 
-This is the **proposed Terra visual baseline**. No X frames or generated design concepts were available/approved during planning. Do not describe it as extracted from the source video. At TR-004, create and inspect desktop and mobile concepts or equivalent explicit visual references before detailed UI implementation, then record the selected baseline. Generated concept art must not be substituted for scientific Earth textures or a functioning interface.
+An editorial story told around one enormous planet. Near-black background; airy, light-weight sans-serif headlines; restrained small labels; thin separator rules; almost no cards. The globe occupies the right/central field, with narrative text at left and time at upper right. This is not a monitoring dashboard or a generic space-game HUD.
 
-Creative direction: a quiet orbital observatory. A believable Earth, restrained instrument chrome, spacious framing, precise typography and meaningful motion. Avoid a neon science-fiction dashboard, overexposed bloom, rainbow overlays, giant cards, fake telemetry and heavy decoration.
+The recording is the primary design reference. It is a 2940 × 1912-pixel capture, not a measurement of CSS viewport size or device-pixel ratio. Evaluate proportions after cropping external player/capture chrome. Do not claim the exact source font, CSS values or original viewport were recovered. Values below are implementation targets chosen from the visible composition.
 
-## 1. Proposed design tokens
+## Composition targets
+
+At a 1440 × 900 implementation viewport, use approximately 56–64px outer horizontal gutters, a 78–90px header band, and a thin horizontal rule. The story starts near x=8% of the viewport and uses roughly 28–35% width. The globe's visual center is around x=68–70%, y=47–49% in Planet mode; it is somewhat larger and more central in Civilization. Preserve readable text over a subtle left-to-right scene fade, not an opaque giant panel.
+
+Planet globe diameter target: roughly 70–82% of usable scene height. Civilization: roughly 85–100%, with purposeful partial overlap behind the narrative/upper area, as in the recording. Keep the atmospheric limb visible wherever not intentionally clipped. The date occupies the upper-right negative space, not a badge in a card. The geological/chapter rail sits around the lower fifth; footer appearance controls and compact utilities sit below a separator.
+
+Use DOM overlays for all interactive controls and text. Do not bake UI into a screenshot. A projection/view-offset helper may frame the globe asymmetrically, but geographic coordinates remain centered on one unchanged sphere. Opening panels must not change the geographic coordinate convention.
+
+## Typography and tokens
+
+Choose a licensed sans-serif that actually resembles the reference's narrow, clean, light-weight letterforms, or a suitable system stack. Source font identity is unknown. Confirm the license before bundling any font. Use actual 300/400 weights where available; never compress letters with a CSS transform to fake the design.
+
+Suggested 1440px desktop type: headline clamp 44–68px, line-height 1.03–1.10, moderate negative tracking; body 14–16px, line-height 1.55–1.7; section labels 10–12px with restrained tracking; date 34–48px depending on length; standard controls 12–14px. Long date ranges need explicit wrapping rules. Mobile body stays at least 14px and headline around 32–44px. Increase tiny source labels when necessary for accessibility; do not reproduce unreadable miniature type just for literal fidelity.
+
+Initial tokens, to refine against the recording:
 
 ```css
-:root {
-  --space: #05080f;
-  --surface: #0d1420;
-  --surface-raised: #142031;
-  --text: #edf3fa;
-  --muted: #a5b2c3;
-  --border: #283447;
-  --accent: #79c9ff;
-  --accent-strong: #39a9f0;
-  --warning: #f1bf71;
-  --danger: #ff8e8e;
-  --radius-control: 8px;
-  --radius-panel: 12px;
-  --space-unit: 4px;
-}
+--bg: #030609;
+--text: #edf1ef;
+--muted: #a6afaf;
+--rule: #1b292b;
+--surface: #091211;
+--planet-accent: #d7e8dc;
+--civilization-accent: #e5d8b4;
+--accent-text: #152019;
+--focus: #a4d9cb;
+--radius-button: 3px;
+--radius-pill: 999px;
 ```
 
-These are starting choices, not sampled reference colors. Check actual contrast before locking them. Use a system sans-serif stack for prose/UI and a system monospace stack for time and numeric readouts. Avoid an external font request in the critical path. Typography: brand 18–20px; primary panel heading 16px/1.35; body/control labels 14px/1.45; secondary labels 12px/1.45; numeric clock 14px with tabular figures. Do not make all labels tiny uppercase tracking exercises.
+The large story CTA is pale mint in Planet and warm parchment in Civilization, with dark text and a small action icon. The small transport pill is dark/translucent with an outline. The appearance switch is a compact segmented control in a dark green-black container. Avoid bright cobalt dashboard buttons. Check contrast in final rendered context.
 
-Spacing follows 4/8/12/16/24/32px. Target controls at least 44×44 CSS pixels on touch layouts. A single understated line-icon family is enough. Every icon-only action needs a visible tooltip and accessible name; color is never the sole state indicator.
+## Header and narrative
 
-## 2. Desktop composition
+Use `terra.` as original branding, not the creator's `earth.` identity. Preserve The Planet / Civilization / Sources labels. A subtle active marker under the selected top section is sufficient. No avatar, search field, login or extra top navigation.
 
-Primary reference viewport: 1440×900. Also test 1280×800 and 1920×1080.
+Narrative anatomy: context label; headline; short body; one primary action and a small source action. The recording shows open text, not a bordered narrative card. Preserve a stable block height so transitions do not jerk the timeline or controls. Fade/translate text modestly; no typewriter effect. Keep outgoing text inaccessible to screen readers during a transition and expose only one live chapter.
 
-Top bar: 64px. Bottom timeline region: approximately 92px. Left rail: 56px. Optional Explore/Layers panel: 280px. Optional inspector: 300–320px. The stage receives remaining space and its camera aspect updates when panels open. Prefer resizing the stage over translating the planet in world space. Coordinate calculations must remain unchanged by UI layout.
+## Planet materials
 
-The initial screen has both detail panels closed. Earth occupies approximately 65–72% of stage height at the default camera, not 90% of the whole viewport. Leave room for the atmospheric limb and a small interaction hint. Default vertical field of view is 42°, radius is 1 world unit and camera distance is approximately 4 units. Tune composition from screenshots, not guessed CSS.
+Recognizable modern texture detail, dark blue oceans and green/brown land. Ocean highlights exist in the reference but should not obscure whole continents. Clouds are separate, modest and not a full white blanket. Atmosphere is a narrow cool-blue edge, not a thick luminous ring. Space is nearly black with sparse/dim detail; do not add a dense star wallpaper.
 
-Keep the stage background continuous with the application shell. Panels can use a restrained translucent finish but must remain readable without expensive full-screen blur. Do not apply blur to large moving surfaces on mobile.
+The early-Earth globe needs dark crust and lava emission with genuinely different surface structure. Ice needs a distinct mask and albedo, not a white opacity overlay over every interface element. Ancient continental geometry must change. Late geological keys cannot all be present-day Earth under different color filters.
 
-## 3. Narrow-screen composition
+Natural, After dark and Blue hour are artistic appearance presets. Global city emission is enabled only for present-day contexts. Tone mapping and sRGB conversion must happen correctly once; diagnose color-space problems rather than fixing them with arbitrary exposure.
 
-At 390×844 and 360×800, use a 56px top bar, a compact playback strip and a bottom action bar. Hide secondary actions in overflow. Panels become one bottom sheet at a time, with a clear close handle/button and a visible heading. The selected point remains visible above a half-height inspector sheet.
+## Civilization materials and overlays
 
-Use `100dvh` with a safe fallback and safe-area padding. Verify landscape phone orientation, 200% text zoom and long place names. The body must not horizontally scroll. Avoid blocking pinch gestures intended for browser zoom outside the stage. Do not globally disable touch behavior on the page.
+The globe appears larger and darker/clearer, with focus on the selected geographic region. Surface labels are subtle, tightly connected to places, and occluded on the far side. Current-site halos are soft and small, not red map pins. Route arcs and region masks are restrained. The footprint card is the one purposeful floating information panel, near the lower right above the rail.
 
-## 4. Planet treatment
+At C17, emphasize one neighborhood/site. At C18, fade into modern night imagery with fine city patterns and a controlled pullback. Do not wash the whole Earth in bloom. A globe turning through a dark ocean is acceptable during a short intentional transition, but a chapter's final pose must expose its subject.
 
-Surface: recognizable continent detail, dark but not black oceans, and no obvious baked second Sun. Use night/day maps aligned to the same canonical UV frame. Ocean highlights should be narrow, controlled and masked away from land. If a valid ocean mask is unavailable, disable the dedicated ocean effect rather than inventing water from color thresholds and presenting it as reliable classification.
+## Motion and control ownership
 
-Night side: warm, fine city patterns. Darkness should retain limited form without illuminating the full night surface evenly. Bright lights must be suppressed on the day side. Bloom is optional and must be selective, restrained, and off on lower quality if needed.
+Proposed timing: panel fade 180–240ms; text transition 250–450ms; camera move 1.0–1.8 seconds at normal speed. Final timings are Terra choices, not recovered source constants. At 5× playback, camera transitions need a minimum perceptible duration and remain within the chapter slot; never overlap multiple camera owners. A manual drag cancels scripted motion immediately and pauses story time.
 
-Atmosphere: thin blue/cyan limb on the lit side, a subtler dusk edge, and a much weaker dark-side rim. Use an artistic shell in core; do not call it a physically integrated scattering model. The atmosphere must not resemble a thick luminous ring.
+Use direction interpolation along the sphere plus separate distance interpolation, not Cartesian chords through Earth. At antipodal targets choose a stable intermediate direction. Easing should be quiet and continuous; no spring overshoot across continents. Reduced motion replaces flyovers and pulsing with stable changes and never prevents content access.
 
-Clouds: separate layer with coherent sunlight, no black alpha fringes, no doubled opaque planet, and no uniformly white globe. Cloud movement is artistic advection of a historical/procedural texture, clearly identified in Credits.
+## Unobserved surfaces to complete
 
-Stars: sparse, dim, fixed-seed points. No star visibility through the planet or UI panels. This is decorative space, not an accurate star catalogue.
+All chapters panel, Sources/details panel, speed menu, failure states, narrow/mobile layouts and keyboard focus states were not opened or demonstrated in the recording. Build these in the same visual language and label their design in the fidelity ledger as Terra-specific completions, not source observations.
 
-## 5. Interaction timing
+On mobile, place story copy above/below a usable globe rather than layering text over every continent. Use a compact chapter rail with horizontal overflow confined to that component, prev/next buttons and a readable date. Allow vertical page scrolling. Do not force the desktop fullscreen canvas composition into a 390px-wide device.
 
-Ordinary hover/focus changes: 120–160ms. Panel transitions: 180–240ms. Camera fly-to: roughly 900–1400ms, based on angular distance, using smooth ease-in/out and cancellation. Do not bounce the globe. At reduced motion, replace long camera paths with an immediate or very short state change and leave auto-orbit/tour motion off.
+## Visual checkpoints
 
-Camera constraints: no panning in core; distance 1.5–10 Earth radii; prevent unstable exact-pole camera positions; normalize orientation. Wheel zoom must remain controllable on a trackpad. Avoid camera position interpolation along a chord through Earth. Interpolate a unit viewing direction and radial distance separately, with an explicit fallback for antipodal directions.
+Capture reproducible implementation states corresponding to: opening Africa, modern After dark, Blue hour, hot formation, ocean emergence, ice, Pangea, breakup, Civilization intro, C01 Africa, C04 Uruk, C06 Indus, C10 Pacific, C12 Andes, C13 West Africa, C17 local light and C18 night globe. Compare composition, globe scale/position, geographic subject, material state, headline rhythm, date fit, CTA color, rail anatomy and overlay restraint.
 
-Toggling a layer changes the scene immediately or with a short material fade; it must not reset the camera, clock, quality or selection. Hovering a panel must not rotate the planet. Keyboard shortcuts apply only when focus is outside editable controls, except Escape for closing the active modal/mode.
-
-## 6. Required visual states
-
-| State | Must show | Must not show |
-| --- | --- | --- |
-| Initial showcase | Recognizable lit Earth, compact chrome, paused UTC time, clear controls | Login, dashboard cards, unexplained counters |
-| Night Lights | Fine visible urban emission and coherent terminator | Bloom washing out continents |
-| Selected place | Named point, inspector, readable marker | Labels on the far side of Earth |
-| Lab | Distinct simulated-mode indicator and coherent controls/curve | A badge falsely saying live or scientifically validated |
-| Mobile inspector | Legible sheet and usable stage/playback | Clipped controls, horizontal scrolling |
-| Loading | Truthful asset stages and actionable failure | Fake percentage or infinite spinner |
-| WebGL unavailable | Real poster, capability explanation, static documentation links | A blank black box |
-| Photo mode | Clean rendered planet and clear exit affordance | Inescapable hidden UI |
-
-## 7. Showcase storyboard — proposed, not source-video timestamps
-
-A 35–50 second optional tour should have four scenes: a lit Earth establishing shot; a controlled move toward the terminator; a nighttime city reveal; and a wider polar/seasonal view. Each scene is a structured preset with an explicit clock and camera. Transitions interpolate both light/time and camera intentionally; they must not jump to an unrelated instant unless a cut is specified.
-
-Keep captions short and factual: `Explore Earth`, `Follow the light`, `Cities after dark`, `A different perspective`. Do not imply these captions were present in the X video. Avoid AI-model claims or performance statistics inside the scene.
-
-## 8. Visual verification procedure
-
-Before sign-off, inspect the selected visual concept/baseline and the current application screenshot side by side at matching dimensions. Compare composition, globe size, continent orientation, lighting, atmosphere thickness, city-light strength, type scale, control density, whitespace, focus states and mobile sheet behavior. Capture a mismatch ledger with at least five concrete comparison points and fix material mismatches.
-
-Automated screenshot baselines protect against regressions; they do not judge whether the first baseline looks good. Do not use pixel-perfect cross-GPU image matching as the only acceptance criterion. Fix time, seed, DPR, browser and quality settings for deterministic comparisons and maintain renderer-specific tolerances where justified.
-
-Core visual blockers: mirrored continents, a broken texture seam, city lights in daylight, detached atmosphere, clouds clipping through the surface, a blank canvas, unreadable chrome, clipped controls, jittery camera motion, or decorative controls that do nothing.
+Exclude external video-player/capture chrome. Compare at matching aspect ratio and document any viewport crop. Automated pixel comparisons are for regressions on a controlled renderer; they do not replace human visual review of fidelity and polish. Release blockers include wrong hemisphere, mirrored maps, fake continental drift, future city lights, unreadable copy, dead controls, camera fighting, generic dashboard chrome or only a handful of the required chapters.

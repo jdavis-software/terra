@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "sourceType": "user-uploaded-screen-recording",
+  "originalFilename": "Screen Recording 2026-09-06 at 10.07.01 PM.mov",
+  "durationSeconds": 83.281792,
+  "widthPixels": 2940,
+  "heightPixels": 1912,
+  "reportedVideoFrameRate": "60/1",
+  "videoCodec": "h264",
+  "audioCodec": "aac",
+  "sizeBytes": 348351663,
+  "sha256": "d914fc281e92e6366f23b617236e9a03a4bfdbe48d02e2dbda53aad4ed8964b7",
+  "reviewMethod": "FFmpeg-decoded 4-second and 1-second samples, contact sheets, enlarged visual inspection of screens and text regions",
+  "timestampConvention": "approximate seconds relative to uploaded recording, not original X video playback time",
+  "audioTranscribed": false,
+  "originalApplicationVisited": false,
+  "originalSourceCodeInspected": false,
+  "originalStackVerified": false,
+  "rawMediaRedistributionAuthorized": false,
+  "rawMediaCommitted": false,
+  "recordingFrameRateIsApplicationBenchmark": false,
+  "referencePost": "https://x.com/akshdeeps_001/status/2096776530005488028",
+  "referenceVideo": "https://x.com/akshdeeps_001/status/2096776530005488028/video/1",
+  "observedPlanetAnchorCount": 10,
+  "observedCivilizationChapterCount": 18,
+  "notes": [
+    "The file includes external video-player and operating-system capture overlays; these are not application controls.",
+    "Review frames remain outside public Git history; evidence is described by timestamps and this checksum.",
+    "The prior observatory/sunlight-lab plan is superseded by the recording-based v2 specification."
+  ]
+}

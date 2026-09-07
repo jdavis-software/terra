@@ -1,619 +1,496 @@
-# Terra implementation roadmap
+# Terra v2 implementation roadmap
 
-## How to execute
+## Execute this version
 
-There are **62 core tasks** across M0–M7 and **8 optional extensions**. All implementation tasks start unchecked. Documentation existing in the planning packet does not mean implementation verification has occurred. Stable task IDs are intentionally grouped with gaps between milestones.
+**72 core tasks, TE-001–TE-072, in nine eight-task epics.** This replaces the 62-task observatory/sunlight-lab plan. Old TR IDs remain in Git history for traceability, not as implementation requirements. All TE tasks begin unchecked; the recording analysis and specification are completed planning deliverables, not proof of implemented code.
 
-Each task specifies dependencies, work, intended files and acceptance evidence. Read the corresponding product/visual/numerical specification before coding. Use `PROGRESS.md` for actual status, commit IDs, commands, screenshots and blockers. GitHub epic issues mirror these task groups; this file is authoritative.
+Read AGENTS.md, ASTRA_GOAL.md and the linked specifications first. Each task below has dependencies, intended files, work and acceptance evidence. `PROGRESS.md` records actual status, commands, screenshots, commits and blockers. Do not create 72 separate issues by default: the GitHub epic checklists organize these canonical tasks.
 
-Complete M0, then M1's real vertical slice, before polishing all UI panels. Do not parallelize around unresolved coordinate or state contracts. Pure model/UI work may proceed in separate worktrees once contracts are stable. One owner integrates materials, scene root and shared state.
+**Core result:** ten geological anchors, eighteen human chapters, both introductions, all visible primary controls, original narrative copy, independently permitted assets, responsive/accessibility paths, real tests and a verified portfolio release. No solar lab, generic location dashboard, backend or AI API is required.
 
 ```mermaid
 flowchart LR
-  M0[M0 Evidence and feasibility] --> M1[M1 Vertical slice]
-  M1 --> M2[M2 Rendering]
-  M2 --> M3[M3 Time and sunlight]
-  M3 --> M4[M4 Exploration]
-  M4 --> M5[M5 Showcase interactions]
-  M5 --> M6[M6 Hardening]
-  M6 --> M7[M7 Verification and release]
-  M7 -. optional .-> EXT[TR-080 to TR-087]
+  M0[M0 Evidence and feasibility] --> M1[M1 Real opening slice]
+  M1 --> M2[M2 Cinematic renderer]
+  M2 --> M3[M3 Planet history]
+  M2 --> M4[M4 Civilization]
+  M3 --> M5[M5 Integrated interactions]
+  M4 --> M5
+  M5 --> M6[M6 Responsive and resilient]
+  M6 --> M7[M7 Verification]
+  M7 --> M8[M8 Portfolio release]
 ```
 
-The milestone graph is a safe default sequence. Task-level dependencies permit focused parallel work within it. No optional task is needed for core completion.
-
-## M0 — Evidence, assets and feasibility
-
-**Exit gate:** the implementer knows exactly what is proposed versus observed, has viable asset sources, understands the coordinate/model contracts, and has selected desktop/mobile visual targets.
-
-### TR-001 — Reassess the supplied reference without inventing observations
-
-- [ ] Complete and record evidence.
-- **Dependencies:** none. **Files:** `docs/REFERENCE_ANALYSIS.md`, `docs/PROGRESS.md`.
-- **Work:** try the exact X post/video in the available browser and any accessible author-linked demo. If accessible, record metadata and an actual timestamped interaction/frame inventory. If not, record the failure and explicitly proceed with the proposed Earth-observatory baseline. Do not republish raw media without rights.
-- **Acceptance:** every source-feature claim is classified; no fabricated timestamps, stack or controls. The implementer acknowledges that exact reference parity remains unverified when access fails. This task can finish with a documented inaccessible-reference outcome; the separate parity claim cannot.
-- **Verification:** review the evidence ledger against actual retrieved material and document any baseline mismatch risk.
-
-### TR-002 — Prove the core asset sources are usable
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-001. **Files:** `docs/ASSETS_AND_SOURCES.md`, local acquisition records, initial preview asset.
-- **Work:** choose exact day/night image items; verify download, projection, credit, observation period and terms. Identify a permitted cloud source or original procedural fallback. Determine whether a reliable ocean mask is available. Download a small preview and check geographic alignment manually.
-- **Acceptance:** day and night assets have a concrete permitted acquisition path; every uncertain auxiliary asset has an explicit fallback. No reliance on the reference site's hotlinks. No blanket claim that all NASA material is unrestricted.
-- **Verification:** inspect downloaded previews and record exact URLs, dimensions and SHA-256 values; record terms checks rather than guessed license names.
-
-### TR-003 — Inspect the repository and define toolchain constraints
-
-- [ ] Complete and record evidence.
-- **Dependencies:** none. **Files:** `docs/DECISIONS.md`, `docs/PROGRESS.md`.
-- **Work:** inspect current branch, existing files, package configuration and user changes. Confirm this plan has not been superseded by code. Define a task branch/worktree and a compatible stable Node/pnpm/React/Vite/R3F/Three.js set to verify during bootstrap.
-- **Acceptance:** no unrelated files or global configuration are changed; potential peer-version conflicts are resolved before installing. Reuse real existing conventions if the repo has advanced since planning.
-- **Verification:** record repository baseline and proposed version/compatibility sources. Do not record secrets or private machine paths.
-
-### TR-004 — Establish actual visual targets
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-001. **Files:** `docs/VISUAL_SPEC.md`, permitted concepts under `docs/design/`.
-- **Work:** create/review a complete desktop primary screen and mobile inspector/lab composition. Use generated concepts where available, or an explicit equivalent visual reference; label concepts as concepts. Lock tokens, stage size, panel anatomy, type scale and motion rules.
-- **Acceptance:** the target covers the full simulator surface, not just a hero image. The planet is dominant, controls are legible and mobile composition is intentional. Do not call an agent-selected design user-approved without actual approval.
-- **Verification:** inspect the targets visually and write a short design decision with five concrete composition criteria.
-
-### TR-005 — Verify astronomy conventions and define independent fixtures
-
-- [ ] Complete and record evidence.
-- **Dependencies:** none. **Files:** `docs/SIMULATION_SPEC.md`, `docs/ASSETS_AND_SOURCES.md`, fixture source notes.
-- **Work:** verify the current astronomy API's vector frame, RA units, EQJ/EQD conversion and sidereal-time semantics. Verify twilight terminology against an authoritative source. Choose independent solar-position fixture sources and expected conventions/tolerances.
-- **Acceptance:** there is one documented east-positive, Y-up Earth-fixed mapping and no ambiguity about degrees/hours/radians or geometric versus refracted altitude. Fixture provenance is planned, not invented.
-- **Verification:** review equations and API signatures. Numerical implementation/tests occur in TR-015 and TR-031; do not claim them already passed.
-
-### TR-006 — Freeze the core contract and risk register
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-002, TR-003, TR-004, TR-005. **Files:** `docs/DECISIONS.md`, `docs/PROGRESS.md`.
-- **Work:** reconcile assets, design, coordinates, state shape, performance targets and deployment constraints. Explicitly retain the 62-task core and deferred extensions. Record unresolved reference access separately from build blockers.
-- **Acceptance:** no contradictory model/UI contract remains; a developer can bootstrap without choosing a new product. Real blockers have a bounded workaround or clear status.
-- **Verification:** a brief readiness review links each risk to a task and names the next dependency-ready task.
-
-## M1 — A functioning vertical slice
-
-**Exit gate:** a real Earth renders in a real browser, loads an actual approved texture, supports orbit/zoom, and uses tested coordinates. A static mockup does not pass.
-
-### TR-010 — Bootstrap the single application
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-006. **Files:** `package.json`, one lockfile, `tsconfig*`, `vite.config.ts`, runtime/package-manager pins, `.gitignore`, `index.html`.
-- **Work:** scaffold React/TypeScript/Vite without a monorepo; install verified compatible stable dependencies; enable strict TypeScript; set up a configurable base for `/terra/` and `/`. Avoid unused backend dependencies.
-- **Acceptance:** a clean install is reproducible and a minimal production build succeeds. Runtime and package-manager requirements are documented. No multiple lockfiles or floating production dependency tags.
-- **Verification:** record exact versions and outputs from install, typecheck and build.
-
-### TR-011 — Establish meaningful checks from the start
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-010. **Files:** lint/format config, Vitest config, initial test helpers, package scripts.
-- **Work:** implement lint, typecheck, unit and docs-check scripts with real checks; add an initial state/schema smoke test. Define asset verification behavior for the current small verified asset set. Keep `check` fail-fast.
-- **Acceptance:** each script executes actual work; a deliberately failing test exits nonzero. Document future script additions instead of shipping `echo success` stubs.
-- **Verification:** run positive and negative smoke cases and remove temporary deliberate failures.
-
-### TR-012 — Build the accessible application shell
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-010, TR-004. **Files:** `src/app/*`, `src/components/ui/*`, `src/styles/*`.
-- **Work:** implement stage layout, compact top bar, rail, timeline region, panel/dialog primitives and focus handling from the visual target. Keep feature controls hidden or honestly disabled until wired; remove all such placeholders before core release.
-- **Acceptance:** desktop and narrow layout render without overflow; controls use semantic HTML and deliberate typography. The stage is the dominant surface.
-- **Verification:** browser screenshots at 1440×900 and 390×844; initial keyboard traversal and 200% text-zoom check.
-
-### TR-013 — Initialize the WebGL2 scene and readiness lifecycle
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-010, TR-012. **Files:** `src/scene/SceneCanvas.tsx`, scene error boundary, readiness state.
-- **Work:** create one R3F canvas, perspective camera, controlled output/tone mapping and basic render diagnostics. Add capability detection and a usable non-WebGL fallback. Define readiness only after required visible resources have loaded and rendered.
-- **Acceptance:** actual WebGL2 renders; errors do not leave a silent black screen; React remounts do not create duplicate animation loops.
-- **Verification:** inspect a real browser canvas and console; test the unsupported-capability path through a controlled test seam.
-
-### TR-014 — Render a preview Earth with correct geography
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-013, TR-002. **Files:** `src/scene/EarthSurface.tsx`, preview texture metadata.
-- **Work:** render the radius-1 sphere with a permitted low-resolution day texture and simple deliberate lighting. Normalize image orientation/UV behavior once; do not accumulate magic rotations.
-- **Acceptance:** Africa/Europe, the Americas, Australia and date-line edges are correctly oriented and located. The north pole is north; the map is neither mirrored nor vertically inverted.
-- **Verification:** capture annotated landmark checks and inspect the seam at the closest allowed camera distance.
-
-### TR-015 — Implement and test coordinate primitives
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-011. **Files:** `src/simulation/coordinates.ts`, coordinate unit tests.
-- **Work:** implement degrees/radians helpers, longitude normalization, lat/lon↔vector conversion, pole behavior, angular separation and canonical UV helpers. Keep pure functions free of React/Three.js.
-- **Acceptance:** all anchors and round trips in `SIMULATION_SPEC.md` pass; nonfinite/zero-vector inputs fail safely; poles do not produce misleading longitude precision.
-- **Verification:** deterministic unit fixtures and randomized round-trip tests including ±180°, near poles and both hemispheres.
-
-### TR-016 — Add constrained orbit and zoom
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-013, TR-015. **Files:** `src/scene/camera/*`.
-- **Work:** wire pointer/touch/trackpad orbit, distance limits, no pan, stable pole behavior, reset view and initial camera intent. Establish camera ownership states even before tours exist.
-- **Acceptance:** camera never enters Earth or flips uncontrollably; controls do not react to panel interactions; default distance/FOV matches the visual target.
-- **Verification:** drag, pinch/wheel, resize, reset and rapid input in a real browser; test camera-bound math separately.
-
-### TR-017 — Pass the vertical-slice review
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-011, TR-012, TR-014, TR-015, TR-016. **Files:** `tests/e2e/smoke.spec.ts`, curated screenshots, `docs/PROGRESS.md`.
-- **Work:** launch the actual production preview, load the initial scene and exercise orbit/zoom/reset. Inspect the visual baseline before moving to complex materials.
-- **Acceptance:** a real textured planet, usable chrome and correct geography exist; no blank-canvas or console-error happy path. This is not satisfied by scaffolding alone.
-- **Verification:** attach screenshots, browser details, basic test output and a five-point visual mismatch/fix ledger.
-
-## M2 — Cinematic Earth rendering
-
-**Exit gate:** strong day/night appearance, coherent clouds/atmosphere, a viable quality pipeline and a tested resource lifecycle.
-
-### TR-020 — Implement the reproducible asset pipeline
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-017, TR-002. **Files:** `scripts/assets/*`, `public/assets/manifest.json`, typed asset manager.
-- **Work:** acquire approved originals; produce preview/low/medium and optional high derivatives; record hashes, dimensions, observation periods, color purpose and transformation recipes. Add local KTX2 support only if its measured benefit justifies it.
-- **Acceptance:** `assets:verify` catches missing files, hashes, credits and pending entries. Runtime paths respect the build base. No enormous raw scientific images enter normal Git history.
-- **Verification:** rebuild at least one derivative reproducibly, validate the manifest and test an intentional corrupt/missing asset.
-
-### TR-021 — Build the surface material and correct color pipeline
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-020, TR-015. **Files:** `src/scene/materials/surface*`, `EarthSurface.tsx`.
-- **Work:** implement linear-space illumination, sRGB albedo/emission handling and one output conversion. Add ocean response with a verified mask or document a restrained no-mask fallback. Expose named appearance constants, not scattered literals.
-- **Acceptance:** the surface is neither washed out nor double-gamma darkened; highlights do not coat land indiscriminately. Material compiles on the baseline browser matrix.
-- **Verification:** inspect day/ocean/coastline close-ups; compare a neutral color fixture; capture shader compile failures as test errors.
-
-### TR-022 — Implement coherent terminator and city lights
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-021. **Files:** surface shader, lighting fixtures.
-- **Work:** use a normalized Earth-fixed Sun direction to blend daylight and historical night emission. Start with controlled fixture vectors; TR-032 connects real timeline values. Keep artistic twilight width separate from numerical altitude.
-- **Acceptance:** night lights appear only on the dark side with a smooth boundary; day/night textures align geographically. No city texture through daylight clouds/oceans as an unmasked overlay.
-- **Verification:** render three fixed Sun directions and confirm that light/dark locations match dot-product expectations.
-
-### TR-023 — Add the cloud layer
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-020, TR-022. **Files:** `Clouds.tsx`, cloud material, artistic phase helper.
-- **Work:** use a separate shell near radius 1.006 with a permitted alpha texture or original procedural texture. Reuse the Sun direction, correct transparency/depth behavior and deterministic artistic phase.
-- **Acceptance:** no opaque double Earth, black alpha fringes or visible seam. Clouds do not pretend to be live weather; movement is reproducible.
-- **Verification:** inspect limb/day/night/seam views, toggle repeatedly and check stability at near/far camera distances.
-
-### TR-024 — Add a restrained atmosphere
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-022. **Files:** `Atmosphere.tsx`, atmosphere material.
-- **Work:** implement a thin, view-dependent sunlight-weighted limb shell near radius 1.025. Treat this as an artistic approximation. Tune depth/culling/transparency without masking surface defects with glow.
-- **Acceptance:** the lit limb looks atmospheric, not like a neon ring; dark-side glow is weaker; the shell does not detach or flicker. No claim of physically integrated atmospheric scattering.
-- **Verification:** compare wide/close, day/terminator/night and low/high DPR screenshots.
-
-### TR-025 — Finish the background and visual hierarchy
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-023, TR-024. **Files:** `Stars.tsx`, scene appearance settings.
-- **Work:** add a low-density fixed-seed star field and refine planet/background contrast. Keep stars decorative and cheap. Evaluate any bloom in an isolated comparison; omit it if it weakens detail or costs too much.
-- **Acceptance:** stars never compete with Earth or show through it; the scene looks finished with postprocessing disabled. No random per-load star changes in test fixtures.
-- **Verification:** before/after visual review and renderer draw-call/resource counts.
-
-### TR-026 — Implement progressive quality tiers
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-020, TR-025. **Files:** asset tier selector, settings quality control, scene quality adapter.
-- **Work:** define low/medium/high texture and geometry tiers with DPR caps of approximately 1/1.5/2. Render the preview first, upgrade atomically and retain a user override. Capability-gate high assets; lower resolution when ordinary-image fallbacks would exceed memory targets.
-- **Acceptance:** quality changes preserve camera/time/selection and do not blank the globe. Initial load does not download every high-tier asset. All tiers remain visually coherent.
-- **Verification:** network inspection, repeated switches, memory estimates and side-by-side tier screenshots.
-
-### TR-027 — Prove rendering resource ownership
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-026. **Files:** loader/resource teardown paths, lifecycle tests.
-- **Work:** dispose replaced/unmounted textures, geometries, materials, render targets, listeners and transcoder workers according to ownership. Avoid disposing shared resources still in use. Test development remount behavior.
-- **Acceptance:** resource counts plateau after warm-up across repeated quality switches and scene remounts. No duplicated loops, stale loads replacing new ones, or increasing worker count.
-- **Verification:** record a 20-cycle resource-count test and investigate growth rather than labeling estimates as measured GPU bytes.
-
-## M3 — Time and sunlight simulation
-
-**Exit gate:** one continuous clock drives the Earth Sun, materials and readouts; the lab is separate, understandable and numerically tested.
-
-### TR-030 — Implement the anchored simulation clock
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-015, TR-017. **Files:** `src/simulation/clock.ts`, runtime bridge, clock tests.
-- **Work:** implement monotonic anchor evaluation, play/pause, seek, speed changes, time bounds and hidden-tab pause behavior. Never accumulate physical time from frame count.
-- **Acceptance:** continuity and frame-schedule independence match the numerical specification; hidden periods do not cause huge jumps.
-- **Verification:** 1×/60×/3600×, pause, seek, rapid speed changes, visibility and date-boundary unit tests.
-
-### TR-031 — Implement and independently validate the Sun adapter
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-030, TR-005. **Files:** `src/simulation/sun-provider.ts`, numerical fixtures/tests.
-- **Work:** wrap the verified astronomy APIs, transform J2000 to of-date coordinates, derive Earth-fixed subsolar direction and normalize. Implement bounded caching/vector interpolation. Acquire documented independent comparison fixtures.
-- **Acceptance:** correct units/frame and no nonfinite values; independent angular discrepancy meets the ≤0.25° display target; interpolation adds less than 0.05° on tested fixtures.
-- **Verification:** equinox/solstice, midnight, leap-day and year-boundary fixtures with provenance. Do not compare only against another call to the same adapter.
-
-### TR-032 — Connect a single snapshot to materials and readouts
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-031, TR-022, TR-023, TR-024. **Files:** `SimulationBridge`, material uniform updates, pure sunlight helpers.
-- **Work:** use one snapshot for surface/cloud/atmosphere light direction and numeric solar altitude. Keep frame-loop mutation outside React state broadcasts. The Earth surface remains fixed; camera motion is separate.
-- **Acceptance:** changing camera position does not change a selected location's illumination; time changes move the terminator coherently; no duplicate daily rotation.
-- **Verification:** numeric/visual fixture comparisons at three places and three epochs; check React update rates during playback.
-
-### TR-033 — Build complete timeline controls
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-030, TR-032, TR-012. **Files:** `src/features/timeline/*`.
-- **Work:** wire play/pause, speeds, UTC date/time input, daily scrubber, Now and reset. Pause during/after scrubbing, preserve valid input on errors, and update the day at midnight.
-- **Acceptance:** all controls affect the authoritative clock; UTC is explicit; changing a slider does not silently reset camera/layers. Now does not label historical textures live.
-- **Verification:** component tests plus browser checks for keyboard editing, invalid dates, leap day, midnight and rapid interactions.
-
-### TR-034 — Implement the isolated sunlight lab
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-030, TR-032. **Files:** `src/simulation/lab-model.ts`, lab state/control modules.
-- **Work:** implement the specified tilt/season/solar-day model, parameter validation, phase-preserving duration changes and Earth-state restoration. Show a persistent educational-simulation explanation and separate lab time.
-- **Acceptance:** zero tilt eliminates seasonal declination; day-duration changes do not jump phase; leaving the lab restores the previous Earth state paused. No temperatures or climate claims.
-- **Verification:** model invariants, parameter limits, mode-switch preservation and UI label tests.
-
-### TR-035 — Add the daily direct-sunlight curve
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-034, TR-015. **Files:** sunlight sampling helper, lab chart and accessible table/summary.
-- **Work:** sample 361 phases using the same model as the scene; cache by parameters/location and show an honest empty state without a selection. Use a dimensionless 0–1 axis and simulated-hour x axis. Add a worker only if profiling proves necessary.
-- **Acceptance:** all values are finite/bounded, endpoints agree and longer days stretch time rather than inventing higher intensity. The curve has an accessible nonvisual equivalent.
-- **Verification:** equatorial, polar, zero-tilt and 60°-tilt fixtures. Selection wiring is completed in M4; use explicit test coordinates here.
-
-### TR-036 — Author deterministic Earth and lab presets
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-033, TR-034. **Files:** `src/data/presets.ts`, preset schema/tests.
-- **Work:** define Blue Marble, Night Lights, Terminator, Polar Day and three lab presets with explicit camera/time/layers/parameters. Verify seasonal names against the model rather than arbitrary dates.
-- **Acceptance:** presets are reproducible and do not depend on wall-clock startup time. Reapplying a preset fully resets its defined state and clears incompatible mode state.
-- **Verification:** schema tests and actual screenshots for each preset; numerical proof for Polar Day.
-
-### TR-037 — Audit numerical and temporal integration
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-031, TR-032, TR-033, TR-034, TR-035, TR-036. **Files:** integration tests, `docs/PROGRESS.md`.
-- **Work:** exercise complete timeline/mode/preset transitions and confirm agreement between shader direction, numerical altitude and lab curves. Check 30/60/144Hz synthetic frame schedules.
-- **Acceptance:** no stale model state, time discontinuity, cross-mode contamination or misleading units. Tests cover the specified edge cases.
-- **Verification:** attach the numerical test report and a small visual fixture grid from actual application captures.
-
-## M4 — Exploration and inspection
-
-**Exit gate:** users can find or select places, navigate safely and read useful values; keyboard users have equivalent exploration paths.
-
-### TR-040 — Create a small verified place catalogue
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-002, TR-015. **Files:** `src/data/places.ts`, provenance records.
-- **Work:** curate at least 24 places across hemispheres, including equatorial, polar, date-line and near-antipodal cases. Give stable IDs, names, coordinates and sources. Do not add unused population or political datasets.
-- **Acceptance:** coordinates are range-checked, IDs unique and names readable. Data sources/terms are recorded.
-- **Verification:** schema tests and spot-check at least five locations against the rendered geography.
-
-### TR-041 — Build accessible local place search
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-040, TR-012. **Files:** `src/features/explore/search*`.
-- **Work:** implement case/diacritic-insensitive local filtering, combobox semantics, keyboard navigation, clear and no-results behavior. Keep requests entirely local.
-- **Acceptance:** Enter selects the highlighted result, Escape closes predictably, and no-result text does not look like a network error. Search has no mandatory third-party service.
-- **Verification:** component keyboard tests and browser selection of long/diacritic-containing names.
-
-### TR-042 — Implement accurate surface picking
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-015, TR-016, TR-032. **Files:** surface pointer handlers, selection store.
-- **Work:** raycast the actual Earth surface, transform the point to the canonical frame and derive coordinates. Distinguish a click from a drag using the 6px CSS movement threshold. Ignore cloud/atmosphere shells for location selection.
-- **Acceptance:** arbitrary points are labeled Selected point; no false city identification. Empty space and drag behavior are consistent. Picking remains correct after resize and zoom.
-- **Verification:** known-point ray tests and browser click/drag/no-hit cases near the limb and date line.
-
-### TR-043 — Add markers with correct horizon behavior
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-040, TR-042. **Files:** `src/scene/layers/markers*`.
-- **Work:** render a restrained set of markers/labels with depth and finite-distance horizon occlusion. For a sphere, visibility must account for camera distance, not merely a hemisphere dot-product shortcut. Deconflict labels and prioritize selection.
-- **Acceptance:** far-side labels do not show through Earth; near-limb labels are stable; DOM label count remains bounded. Selection stays visually identifiable.
-- **Verification:** front/back/limb camera fixtures, close-camera occlusion tests and dense-region screenshots.
-
-### TR-044 — Implement cancellable fly-to navigation
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-016, TR-041, TR-042. **Files:** camera director and interpolation tests.
-- **Work:** fly to named or manually selected coordinates using spherical direction/radius interpolation. Handle antipodal and near-pole transitions, release controls cleanly and cancel on user input.
-- **Acceptance:** the camera never cuts through Earth, fights orbit controls or resumes an old cancelled tween. Reduced-motion behavior is immediate/short and usable.
-- **Verification:** antipodal, polar, repeated-search and mid-transition cancellation tests with browser video inspection.
-
-### TR-045 — Build the truthful location inspector
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-032, TR-035, TR-041, TR-042. **Files:** inspector, solar-time/category helpers and tests.
-- **Work:** show name/point coordinates, geometric solar altitude, twilight category, local apparent solar time and source/model explanation. Connect the same selection to the lab curve. Handle pole-specific undefined values.
-- **Acceptance:** values match the scene model and update at a readable rate; no civil-time claim, invented altitude/temperature or hidden default location. No screen-reader announcement storm during playback.
-- **Verification:** reference fixtures, category boundaries, equatorial/polar inspection and Earth↔lab selection continuity.
-
-### TR-046 — Finish geographic overlays and layer controls
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-025, TR-043, TR-045. **Files:** graticule layer, Layers panel, layer state/tests.
-- **Work:** add subtle latitude/longitude lines and functional cloud/atmosphere/night-light/place toggles. Batch line geometry and keep overlays slightly above the sphere without z-fighting. Reset only the intended layer defaults.
-- **Acceptance:** toggles preserve camera/time/selection; graticule wraps correctly and does not show through the globe. Selected-state styling is readable without color alone.
-- **Verification:** all toggle combinations that affect shared materials, repeated resets, and screenshots at the seam/poles.
-
-### TR-047 — Provide non-pointer exploration parity
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-041, TR-044, TR-045, TR-046. **Files:** keyboard camera controls, manual coordinate selection UI.
-- **Work:** provide keyboard camera orbit/zoom/reset, place-list selection and validated latitude/longitude entry for arbitrary points. Keep shortcuts out of text inputs and offer visible help.
-- **Acceptance:** a keyboard-only visitor can select a point, inspect sunlight, change time and return to the default view without manipulating the canvas with a mouse.
-- **Verification:** complete the documented keyboard-only journey and test invalid coordinate input and focus restoration.
-
-## M5 — Portfolio showcase interactions
-
-**Exit gate:** the app has intentional, interruptible presentation features and reproducible scene sharing without sacrificing exploration.
-
-### TR-050 — Implement the data-driven cinematic tour
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-036, TR-044, TR-046. **Files:** `src/data/tour.ts`, tour director/control UI.
-- **Work:** implement four explicit scene keyframes over 35–50 seconds, coherent camera/time/layer transitions, start/pause/resume/exit and pre-tour state restoration. User input must cancel automation first.
-- **Acceptance:** a tour starts only by user action; it is reproducible, interruption-safe and reduced-motion aware. Captions are factual and not attributed to the unviewed reference.
-- **Verification:** deterministic start/end snapshots, mid-tour pause, wheel/keyboard cancellation and restore-state browser tests.
-
-### TR-051 — Add photo mode and honest image capture
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-050. **Files:** photo-mode controller, capture utility.
-- **Work:** hide chrome while retaining an accessible Exit control, support Escape/touch exit and export a canvas-only PNG from a deliberate rendered frame. Avoid globally enabling expensive buffer preservation merely to make one export work.
-- **Acceptance:** exported pixels show the actual planet, not a blank/tainted canvas; the UI clearly states panels are excluded. Failure is actionable and mode remains escapable.
-- **Verification:** inspect the saved image, test clipboard/download restrictions where relevant and check that export does not permanently alter frame rate/resources.
-
-### TR-052 — Implement bounded, versioned scene sharing
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-036, TR-045, TR-046. **Files:** scene schema, serializer/parser, Share UI.
-- **Work:** encode only approved scene fields in a versioned URL hash; cap decoded payload at 8 KiB and validate every number/enum/ID. Open imported scenes paused. Reject arbitrary remote asset URLs or executable content.
-- **Acceptance:** a clean browser reproduces camera/time/lab/layer/selection state; corrupt/unknown-version links fall back safely with a readable warning. Clipboard denial shows a selectable URL.
-- **Verification:** round trips, oversized payloads, malformed JSON, nonfinite values, unknown IDs, date bounds and browser reload.
-
-### TR-053 — Add safe preferences and explicit saved scenes
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-052, TR-026. **Files:** local preference/saved-scene storage adapter.
-- **Work:** version local preferences for quality/reduced motion/dismissed hints; make saved-scene restoration explicit. Respect URL precedence. Handle unavailable/quota-limited/corrupt storage and offer Reset Terra settings scoped to this app.
-- **Acceptance:** stale state never overrides an explicit scene URL or traps a fresh visit in an unusable camera. No unrelated local storage is erased.
-- **Verification:** clean/existing/corrupt/denied storage cases and two-version migration tests.
-
-### TR-054 — Finish help and command access
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-047, TR-050, TR-051, TR-052. **Files:** Help dialog, command registry, shortcut handler.
-- **Work:** document actual gestures/shortcuts and expose core actions through a small searchable command list or equivalent accessible menu. Use one command registry for toolbar/menu/shortcut behavior where practical.
-- **Acceptance:** no advertised shortcut is inert; Escape closes the active layer predictably; shortcuts do not hijack date/search inputs. No command executes a hidden optional feature.
-- **Verification:** keyboard interaction tests and focus restoration after help, share and photo mode.
-
-### TR-055 — Refine onboarding and user-facing copy
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-045, TR-050, TR-054. **Files:** initial hint, empty/error copy, Credits entry points.
-- **Work:** write concise real instructions, clarify simulated time versus historical imagery and explain the lab without a blocking tutorial. Remove developer placeholder text and decorative jargon.
-- **Acceptance:** a first-time visitor can discover orbit, time, search and lab; hints dismiss cleanly and do not cover the planet. No fake Live badge or unexplained metric remains.
-- **Verification:** run the first-session journey with a clean profile and review every visible claim against its source/model.
-
-### TR-056 — Complete the responsive feature layouts
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-033, TR-034, TR-045, TR-050, TR-054. **Files:** feature layout styles, mobile sheet controller.
-- **Work:** integrate all real controls into mobile sheets/overflow, preserving playback access, safe areas, long labels and portrait/landscape behavior. Keep only one major sheet open.
-- **Acceptance:** the full first-session journey works at 360px width with no horizontal overflow or unreachable action. Text zoom does not clip primary controls.
-- **Verification:** 390×844, 360×800 and landscape screenshots plus touch-emulated interaction; real-device testing remains a separate M6 gate.
-
-### TR-057 — Perform interaction and visual polish pass
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-051, TR-052, TR-053, TR-055, TR-056. **Files:** affected UI/camera/material modules, visual ledger.
-- **Work:** refine transitions, tooltips, focus, spacing, numeric formatting and controller handoffs. Compare the complete app to the chosen baseline, not only the opening shot.
-- **Acceptance:** no fighting animations, abrupt unintended state resets, jittering labels, inconsistent typography or visibly unfinished core surface.
-- **Verification:** inspect at least five named states and record concrete mismatches and fixes with actual screenshots.
-
-## M6 — Performance, accessibility and resilience
-
-**Exit gate:** the scene is measured on real hardware where available, degrades cleanly and survives bad inputs/assets/capability conditions.
-
-### TR-060 — Add a reproducible performance harness
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-057. **Files:** perf harness, `tests/evidence/performance/`, `docs/PROGRESS.md`.
-- **Work:** measure production-build frame times over fixed 60-second scenes after warm-up, initial asset transfer, first meaningful globe and interaction stalls. Record device/browser/GPU/DPR/quality/build and network conditions. Profile before automatic quality policy.
-- **Acceptance:** budgets in `QA_AND_RELEASE.md` are measured or explicitly unverified; no headless software-rendering run is called a real-device FPS result.
-- **Verification:** export raw summary data and a readable report; compare at least medium desktop and low mobile when hardware is available.
-
-### TR-061 — Fix identified rendering and asset bottlenecks
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-060, TR-027. **Files:** bottleneck modules, asset tier settings.
-- **Work:** address measured overdraw, DPR, texture residency, allocations, shader cost or unnecessary React work. Use hysteresis/cooldown if adding automatic quality reduction; preserve user override. Do not randomly optimize unrelated code.
-- **Acceptance:** load/performance targets pass on recorded target hardware or deviations are explicit blockers; resource counts remain stable; visual quality does not silently collapse.
-- **Verification:** same-condition before/after profiles and screenshots, plus repeated tier-switch regression tests.
-
-### TR-062 — Implement idle, visibility and reduced-motion behavior
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-030, TR-050, TR-061. **Files:** render scheduling and motion preference bridge.
-- **Work:** use on-demand rendering when paused with no camera/tour/appearance animation; invalidate for asset/control changes. Pause on hidden tabs and prevent automatic motion under reduced-motion preference.
-- **Acceptance:** an idle paused scene does not continuously render for no reason; controls still redraw immediately; returning from a hidden tab causes no time jump or stuck canvas.
-- **Verification:** frame-loop instrumentation, visibility transitions, reduced-motion browser emulation and manual preference toggling.
-
-### TR-063 — Handle WebGL failure and context recovery
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-027, TR-062. **Files:** capability fallback, context lifecycle, recovery UI.
-- **Work:** provide an actual Terra poster plus accessible explanation when WebGL2 fails. Handle context loss with a recoverable state and rebuild resources without losing validated scene intent. Limit automatic retries.
-- **Acceptance:** no infinite reload loop, blank screen or uncaught context error; UI and credits remain accessible. Failed recovery offers a clear manual action.
-- **Verification:** injected unsupported/context-loss scenarios, repeated loss/recovery, state preservation and cleanup counts.
-
-### TR-064 — Run and fix an accessibility audit
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-047, TR-054, TR-056, TR-062. **Files:** accessibility fixes/tests/report.
-- **Work:** audit semantics, contrast, focus order/visibility, dialog focus, accessible names, touch targets, text zoom, reduced motion and chart alternatives. Provide a useful textual scene description without incessant live announcements.
-- **Acceptance:** the full keyboard journey passes; no critical automated accessibility findings remain; manual screen-reader/focus limitations are documented and fixed where possible.
-- **Verification:** automated DOM scan plus manual keyboard and assistive-technology checks; do not call automation alone full accessibility certification.
-
-### TR-065 — Validate the supported browser/device matrix
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-061, TR-063, TR-064. **Files:** compatibility report and fixes.
-- **Work:** exercise current stable Chromium, Firefox and Safari/WebKit behavior, including at least a real macOS Safari run and a real mobile device when available. Record exact tested versions rather than promising every browser.
-- **Acceptance:** core controls/materials work on the declared support matrix; unavailable physical-device checks remain explicitly unverified. Emulation is not mislabeled as an iPhone hardware test.
-- **Verification:** screenshot/interaction matrix and named failures, with narrowed support claims if unresolved.
-
-### TR-066 — Test adverse assets, storage and input states
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-052, TR-053, TR-063. **Files:** failure-injection browser tests and recovery UI fixes.
-- **Work:** test failed/slow/corrupt textures, missing optional tiers, decoder failure, storage denial, invalid URLs and empty selections. Use truthful loading stages; only show byte percentages when totals are known.
-- **Acceptance:** required failures have retry/fallback paths, optional failures preserve a working globe and no stale load overwrites a newer selection/tier. No infinite spinner.
-- **Verification:** deterministic mocked network failures plus real missing-file smoke tests on the production preview.
-
-### TR-067 — Audit provenance, privacy and claims
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-020, TR-055, TR-064, TR-066. **Files:** Credits dialog, asset/license notices, trust checklist.
-- **Work:** review shipped assets and every scientific/live/performance claim; check runtime requests for unexpected services; confirm no secrets or tracking. Finalize original-code licensing separately from asset terms.
-- **Acceptance:** every shipped media file is traceable and permitted; historical/model/artistic labels are correct; reference parity is not claimed without frames; no blanket license over external media.
-- **Verification:** asset manifest check, network audit, repository secret scan and manual review of visible copy/README claims.
-
-## M7 — Verification and portfolio release
-
-**Exit gate:** a clean clone builds and passes the core checks, actual media and engineering evidence are published, and deployment status is truthful.
-
-### TR-070 — Finalize the numerical and unit regression suite
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-037, TR-045, TR-052, TR-066. **Files:** unit/integration tests and reports.
-- **Work:** cover coordinate/UV/pole boundaries, clock transitions, provider conventions, lab invariants, solar-time/categories, URL validation, reducers and asset manifests. Remove tautological tests and document fixture provenance.
-- **Acceptance:** tests fail for meaningful sign/unit/clock/schema regressions and pass on a clean install. No skipped core edge-case tests hidden in the final report.
-- **Verification:** `pnpm test:unit` output and targeted mutation/negative checks for high-risk calculations.
-
-### TR-071 — Complete production-build end-to-end workflows
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-057, TR-063, TR-064, TR-066. **Files:** `tests/e2e/*`, Playwright config.
-- **Work:** test the complete first-session flow, keyboard path, tours, photo mode/export, scene links, mobile sheets and failures against the built preview with `/terra/` base. Wait on a real scene-ready signal, not arbitrary sleeps.
-- **Acceptance:** tests exercise actual WebGL where supported and fail on blank canvas/console shader errors. Mocked fallback tests do not substitute for a real renderer smoke test.
-- **Verification:** `pnpm build` and `pnpm test:e2e`, retained failing traces when relevant, and concise result summary.
-
-### TR-072 — Approve visual baselines and collect quality evidence
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-065, TR-071. **Files:** `tests/visual/*`, curated screenshots, visual fidelity report.
-- **Work:** capture deterministic day/night/terminator/place/lab/mobile/fallback states; inspect each against the chosen baseline. Record browser/OS/DPR/quality and controlled time/seed. Compare actual source frames only if accessible.
-- **Acceptance:** no material visual blockers; every baseline is human/agent visually inspected rather than blindly approved. The report separates Terra-spec fidelity from unresolved X-reference fidelity.
-- **Verification:** side-by-side inspection and mismatch ledger with fixes; bounded visual-regression tolerances documented.
-
-### TR-073 — Configure CI and repository hygiene
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-070, TR-071, TR-072. **Files:** `.github/workflows/*`, contribution/issue templates as useful.
-- **Work:** add clean-install lint/type/unit/asset/docs/build checks and browser tests appropriate to CI. Cache dependencies by lockfile. Use minimal workflow permissions and reviewed pinned action versions. Keep deployment restricted to trusted branch events.
-- **Acceptance:** CI reflects real checks and does not need runtime secrets; untrusted PRs cannot run privileged deployment steps. Large transient artifacts are excluded from Git.
-- **Verification:** a real workflow run and an intentionally failing PR/check scenario where practical; record any unavailable Actions permission.
-
-### TR-074 — Build and verify the static deployment
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-073. **Files:** deployment workflow/config, deployment runbook.
-- **Work:** deploy the static build to the authorized target, preferably GitHub Pages under `/terra/`. Verify index, textures, decoder paths, hash scene links, refresh and cache behavior on the actual public URL.
-- **Acceptance:** the public URL works and is recorded only after inspection. If Pages settings/permissions block deployment, mark this task blocked and provide the built artifact/runbook; do not claim a release deployment.
-- **Verification:** public-site browser smoke test and successful workflow/deploy identifier. A local preview alone does not pass this task.
-
-### TR-075 — Produce real portfolio screenshots and a demo clip
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-072. **Files:** `docs/media/*`, root README updates.
-- **Work:** capture actual application images for day/night, lab and mobile plus a 35–50 second user-flow/tour demo. Optimize repository media size and include meaningful alt text. Use no concept image as a fake app screenshot.
-- **Acceptance:** the README's visual proof opens, matches the actual build and demonstrates interaction rather than a static spin alone. No fabricated benchmark badges or implementation claims.
-- **Verification:** play the clip, inspect images/links and check media payload sizes and attribution.
-
-### TR-076 — Write the engineering case study and runbook
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-061, TR-067, TR-075. **Files:** final architecture notes, benchmark report, setup/deploy troubleshooting, README.
-- **Work:** explain the coordinate convention, time/render separation, atmosphere approximation, asset pipeline, numerical tests and measured performance. Document setup, commands, supported browsers, scientific limitations and remaining reference gap.
-- **Acceptance:** a reviewer can understand the engineering tradeoffs and a developer can run a clean clone without unstated credentials. Claims are backed by actual results.
-- **Verification:** follow the runbook in a clean environment and link every performance claim to its recorded test conditions.
-
-### TR-077 — Perform final release audit and honest handoff
-
-- [ ] Complete and record evidence.
-- **Dependencies:** TR-070, TR-071, TR-072, TR-073, TR-074, TR-075, TR-076. **Files:** `docs/PROGRESS.md`, release notes, roadmap/issue status.
-- **Work:** reconcile all 62 task statuses and evidence; rerun the full check suite; verify public demo/media/credits; prepare v0.1.0 release notes through the authorized repository workflow. Remove temporary debug paths and review outstanding risks.
-- **Acceptance:** no unresolved core blocker is disguised as done; all release claims are accurate. A deployment or hardware-test limitation is explicitly stated and prevents the relevant completion claim. Optional extensions remain optional.
-- **Verification:** final command log, clean working-tree review, checklist/issue reconciliation and a concise handoff with actual URLs, results and limitations.
-
-## Optional extensions — not part of the initial core goal
-
-Do not begin these until the core is complete or an explicit product decision changes scope. Every extension needs its own provenance/performance/test review. Their presence here does not mean they were observed in the X video.
-
-### TR-080 — Optional earthquake observation layer
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** isolated data adapter/layer, fixture data, source notices.
-- **Work:** research the current official USGS GeoJSON feeds, licensing/usage and browser access. Add an optional observed-events layer with acquisition/event times, bounded requests, validation, stale indicators and a clearly dated offline fixture.
-- **Acceptance:** core Earth works without the feed; historical fixtures are never labeled live; event filters/legend/source and failure handling are real.
-- **Verification:** schema/invalid/stale/network tests and performance comparison with the layer off/on.
-
-### TR-081 — Optional Moon and scale-aware orbital view
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** isolated lunar model/scene, scale labels and tests.
-- **Work:** use a documented lunar ephemeris and explicit physical-versus-display scale. Keep terrestrial clock/coordinate contracts unchanged.
-- **Acceptance:** Moon phase and position are tested; exaggerated distance/size is labeled. Do not claim eclipse accuracy without a separate validated shadow model.
-- **Verification:** independent fixtures, scale-mode tests and visual occlusion review.
-
-### TR-082 — Optional physically motivated atmosphere experiment
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** experimental atmosphere module and technical report.
-- **Work:** evaluate a documented scattering model against the core shell, including sunset/limb appearance and GPU cost. Preserve the working core fallback.
-- **Acceptance:** measurable visual improvement and bounded cost; approximation assumptions remain explicit. Do not rename the same Fresnel shader physically accurate.
-- **Verification:** source/model documentation, before/after images and same-device frame-time measurements.
-
-### TR-083 — Optional procedural alternate planet
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** isolated seeded generation/model and generated-planet UI.
-- **Work:** build a repeatable fictional planet mode with independent geography/material inputs. Clearly distinguish it from Earth observations and preserve shareable seeds.
-- **Acceptance:** the result is identified as fictional; no generated continents are passed off as Earth data. Generation does not block the UI or corrupt the core scene.
-- **Verification:** seed determinism, bounds, seam/pole checks and generation/performance tests.
-
-### TR-084 — Optional source-backed scientific overlay
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** dataset-specific adapter, legend, provenance and tests.
-- **Work:** choose one actual dataset with clear units/date/projection/rights, such as elevation or a defined historical climate field. Document resampling and missing data.
-- **Acceptance:** a real legend and observation period exist; no invented heatmap colors or missing-data values masquerade as measurements.
-- **Verification:** known-cell fixtures, projection alignment and color-scale accessibility review.
-
-### TR-085 — Optional regional terrain experiment
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** isolated terrain proof of concept and architecture decision.
-- **Work:** assess a tightly bounded region, licensed elevation data, level of detail and camera precision before considering globe-scale terrain. This is a separate major scope, not a last-minute zoom feature.
-- **Acceptance:** a measured proof demonstrates continuous transition and correct scale, with an explicit fallback to orbital Earth. No unbounded download or paid tiles by default.
-- **Verification:** precision/seam/LOD tests, asset-size budget and real-device performance evidence.
-
-### TR-086 — Optional in-browser motion export
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** optional recorder and compatibility/failure handling.
-- **Work:** research current browser capture/encoding APIs and produce a bounded user-started recording feature where supported. Keep ordinary photo mode and external demo capture available.
-- **Acceptance:** export has accurate progress, cancellation and memory limits; unsupported browsers receive a clear explanation. No silent upload or autoplay audio.
-- **Verification:** inspect output playback, duration/frame pacing, long-recording cancellation and memory behavior.
-
-### TR-087 — Optional WebGPU renderer evaluation
-
-- [ ] Optional; not started.
-- **Dependencies:** TR-077. **Files:** experimental renderer branch/module, benchmark/compatibility report.
-- **Work:** assess the current Three.js WebGPU/node-material path and required shader changes while retaining the WebGL2 baseline. Keep the pure simulation and scene contracts unchanged.
-- **Acceptance:** switch only with demonstrated visual parity, browser support and measurable benefit. Do not delete the working renderer for a marketing badge.
-- **Verification:** side-by-side captures, supported/unsupported-device tests, frame-time comparison and documented fallback behavior.
+Task dependencies permit isolated content/math work before the visual integration milestone. One owner integrates shared state, camera and renderer. Use separate worktrees for independent work, never simultaneous writes to the same lockfile or contract. A stage that fails its exit gate is not complete because its code compiles.
+
+## M0 — Evidence, assets and implementation contracts
+
+**Exit:** the implementer understands the actual recording, has a feasible asset path and a locked, coherent scope.
+
+### TE-001 — Establish a safe implementation baseline
+- [ ] Verified complete.
+- **Depends:** none. **Files:** `docs/PROGRESS.md`, task branch/worktree.
+- **Work:** inspect current repository, branch, existing implementation and uncommitted changes. Record the starting commit. Reuse legitimate existing code if another session has advanced the repository; do not overwrite it with a scaffold.
+- **Accept / verify:** a safe isolated worktree or branch exists, user changes are preserved, and no unrelated project/global configuration is changed. Record the baseline and selected next task without private machine paths.
+
+### TE-002 — Consume the recording analysis and lock reference scope
+- [ ] Verified complete.
+- **Depends:** TE-001. **Files:** `docs/REFERENCE_ANALYSIS.md`, `docs/DECISIONS.md`.
+- **Work:** review the timestamp ledger, recording manifest, ten Planet keys and eighteen Civilization chapters. Inspect actual reference frames when available. Explicitly retire the solar-lab concept and distinguish visible controls from untested panel behavior.
+- **Accept / verify:** scope is the two-journey website, not a generic simulator. Do not repeat endless X-access attempts or claim original source-code/stack inspection. Log material ambiguities before implementation.
+
+### TE-003 — Prove permitted modern and historical asset sources
+- [ ] Verified complete.
+- **Depends:** TE-002. **Files:** `docs/ASSETS_AND_SOURCES.md`, acquisition records.
+- **Work:** identify exact usable day/night items, cloud/mask options and one supported reconstruction dataset. Check item terms, credits, projection, supported ages and downloadable representations. Establish a procedural fallback only for explicitly conceptual early Earth.
+- **Accept / verify:** concrete source files can be acquired and redistributed as intended, or a precise blocker is recorded. No hotlinks to the creator's app, invented license, raw recording upload or unsupported 4.54 Ga reconstruction claim.
+
+### TE-004 — Select and verify a compatible toolchain
+- [ ] Verified complete.
+- **Depends:** TE-001. **Files:** `docs/DECISIONS.md`, toolchain notes.
+- **Work:** verify compatible stable Node, pnpm, React, Vite, TypeScript, Three.js and R3F versions using current official package/documentation information. Choose narrow helper/test dependencies and one package manager.
+- **Accept / verify:** peer requirements and runtime constraints are documented before installation; no independently selected incompatible major versions, floating production tags or unnecessary backend/AI dependencies. Exact installation proof follows in TE-009.
+
+### TE-005 — Establish full-screen visual targets
+- [ ] Verified complete.
+- **Depends:** TE-002. **Files:** `docs/VISUAL_SPEC.md`, permitted local design references.
+- **Work:** define desktop opening, Civilization chapter and mobile compositions from the recording. Lock type, globe scale/position, date placement, rail, CTA colors and panel language. Mobile/open-panel designs are original Terra completions, not observed reference states.
+- **Accept / verify:** targets cover the full app surface, not a marketing hero. Record five concrete visual criteria and direct reference comparisons. Do not call an agent-selected design user-approved without approval.
+
+### TE-006 — Freeze content IDs and domain schemas
+- [ ] Verified complete.
+- **Depends:** TE-002. **Files:** `src/story/types.ts`, `src/data/*`, schema notes.
+- **Work:** define exactly P01–P10, C01–C18 and unnumbered intros; structured historical dates, source IDs, camera/overlay keys, appearance permissions and tagged story state. Keep overlapping date ranges and authored order.
+- **Accept / verify:** no nineteenth chapter, duplicated IDs, implicit JavaScript Date chronology or solar-lab fields. Draft records can remain clearly pending until content review; schema validation must reject invalid production records.
+
+### TE-007 — Prove low-resolution changing-continent feasibility
+- [ ] Verified complete.
+- **Depends:** TE-003. **Files:** `scripts/assets/`, reconstruction proof records.
+- **Work:** obtain a permitted pinned-model sample for Pangea, breakup and modern geography. Produce canonical low-resolution land/coastline masks or equivalent inspectable previews offline; verify model/frame/layer meaning. Test an intermediate blend concept before committing to a large asset set.
+- **Accept / verify:** three genuinely different plausible land configurations exist with provenance. Modern-map recoloring, plate polygons mislabeled coastlines and unsupported epochs fail. A documented image/mask proof suffices here; the browser shader is TE-030.
+
+### TE-008 — Reconcile and freeze the build contract
+- [ ] Verified complete.
+- **Depends:** TE-003, TE-004, TE-005, TE-006, TE-007. **Files:** `docs/DECISIONS.md`, `docs/PROGRESS.md`.
+- **Work:** reconcile visual scope, dataset limits, quality budgets, clocks, coordinate system, content provenance, initial states and deployment target. Map unresolved risks to tasks and select a vertical-slice plan.
+- **Accept / verify:** no contradictory old TR requirement remains active. Data access/licensing failures have an explicit consequence, not a fake success. The next implementation task can proceed without inventing a different product.
+
+## M1 — A real opening-screen vertical slice
+
+**Exit:** today's Earth renders, the editorial composition resembles the recording, and real orbit/zoom works.
+
+### TE-009 — Bootstrap the single application
+- [ ] Verified complete.
+- **Depends:** TE-008. **Files:** `package.json`, lockfile, TypeScript/Vite config, `index.html`, runtime pins.
+- **Work:** initialize the verified React/TypeScript/Vite stack, strict typing, base-path configuration and minimal app. Pin the package manager and document runtime requirements. Avoid a monorepo or unused server scaffold.
+- **Accept / verify:** clean install and production build succeed with one lockfile. Record versions and command results. `/terra/` and configurable root-base behavior are designed in, not patched through hardcoded absolute asset paths.
+
+### TE-010 — Implement meaningful development checks
+- [ ] Verified complete.
+- **Depends:** TE-009. **Files:** lint config, Vitest config, package scripts, initial tests.
+- **Work:** implement lint, typecheck, unit tests and documentation checks, with a real schema/state smoke test. Define fail-fast `check` composition and future asset/content validators without echo-success stubs.
+- **Accept / verify:** actual work executes; a deliberate temporary negative fixture fails with nonzero status. Remove the deliberate failure afterward and record positive outputs. Browser tests are added as real scenes become available.
+
+### TE-011 — Build the accessible editorial app shell
+- [ ] Verified complete.
+- **Depends:** TE-009, TE-005. **Files:** `src/app/`, `components/ui/`, styles.
+- **Work:** implement terra. branding, two-section navigation, Sources, left story region, upper-right date, bottom rail region and appearance/transport controls. Use shared tokens, semantic DOM and stable layout dimensions.
+- **Accept / verify:** no dashboard cards, login, fake counters or copied source branding. At 1440×900 and 1280×800, type and control placement follow the target without clipping. Label unfinished controls honestly during this slice; they cannot ship inert.
+
+### TE-012 — Initialize the renderer and capability states
+- [ ] Verified complete.
+- **Depends:** TE-009. **Files:** `scene/GlobeCanvas.tsx`, capability/error helpers.
+- **Work:** create one WebGL2 renderer/scene with bounded DPR, proper resize handling and error boundaries. Define a revision-aware scene-ready signal for tests after an actual render. Add a basic non-WebGL explanation pending the full fallback.
+- **Accept / verify:** a real scene appears and survives resize; no duplicate contexts on ordinary UI changes. Capture renderer/browser details and test the unavailable-capability path. A DOM-mounted canvas alone does not count as ready.
+
+### TE-013 — Implement the coordinate and UV contract
+- [ ] Verified complete.
+- **Depends:** TE-010, TE-012. **Files:** `src/geo/coordinates.ts`, sphere/UV helper, unit fixtures.
+- **Work:** implement Y-up, east-positive coordinate conversion and a single documented equirectangular orientation. Handle date-line wrapping, poles and seam vertices. Use the same mapping for future camera/marker code.
+- **Accept / verify:** numerical anchors and nonpolar round trips pass. A diagnostic map is north-up and not mirrored; seam/pole checks pass. Remove temporary labels before release, retaining tests and a concise orientation note.
+
+### TE-014 — Render an approved modern preview Earth
+- [ ] Verified complete.
+- **Depends:** TE-003, TE-012, TE-013. **Files:** preview asset/manifest, `scene/Surface.tsx`.
+- **Work:** load a permitted small modern texture through base-relative paths, assign correct color space and fit the globe to the opening composition. Preserve exact source/hash/credit for the preview.
+- **Accept / verify:** continents are identifiable and aligned, Africa/Europe can be framed like the reference, and no placeholder generated globe image substitutes for geometry. Inspect actual browser screenshots and the network request under the chosen base path.
+
+### TE-015 — Add reliable orbit, zoom and reset
+- [ ] Verified complete.
+- **Depends:** TE-011, TE-014. **Files:** `scene/camera/`, input adapter, zoom controls.
+- **Work:** implement one camera owner, pointer orbit, plus/minus zoom and reset with safe distance/pole limits. Separate camera movement from historical time. Reserve wheel behavior for story travel rather than conflicting automatic zoom.
+- **Accept / verify:** controls do not fight, panels do not rotate Earth, and the camera cannot enter the sphere. Verify mouse/trackpad/button use, cancellation hooks, resize and keyboard zoom/reset. Record a short interaction capture.
+
+### TE-016 — Pass the opening visual-slice gate
+- [ ] Verified complete.
+- **Depends:** TE-010–TE-015. **Files:** browser smoke test, visual evidence, `PROGRESS.md`.
+- **Work:** run the actual production build, compare opening composition against the recording, and fix globe scale, lighting direction, typography, CTA placement and timeline spacing before expanding features.
+- **Accept / verify:** real globe/orbit/zoom/reset and legible editorial shell pass at two desktop sizes plus a mobile smoke viewport. Record at least five concrete comparisons and fixes. A generic-looking globe demo does not pass merely because compilation succeeds.
+
+## M2 — Cinematic rendering and bounded assets
+
+**Exit:** modern Earth, appearance presets and resource ownership are credible without relying on bloom to conceal defects.
+
+### TE-017 — Build the progressive asset manager
+- [ ] Verified complete.
+- **Depends:** TE-014, TE-010. **Files:** `src/assets/manager.ts`, manifest types, loader tests.
+- **Work:** implement request deduplication, preview-to-quality upgrades, cancellation generations, bounded cache and ownership. Distinguish downloaded, decoded, GPU-ready and active states. Keep local base-relative URLs.
+- **Accept / verify:** delayed/out-of-order responses cannot overwrite a newer request. Old assets remain valid until replacement readiness, then are released. Test cache bounds, retries and honest progress stages with controlled fake loaders.
+
+### TE-018 — Finish the modern surface shader
+- [ ] Verified complete.
+- **Depends:** TE-017. **Files:** `scene/materials/modern-earth*`, surface component.
+- **Work:** implement coherent albedo, directional illumination and historical night emission using a shared coordinate frame. Use correct linear/sRGB handling and one output/tone-mapping conversion. Keep city emission independently controllable by story policy.
+- **Accept / verify:** day/night maps align, the surface is neither washed out nor doubly gamma-corrected, and daytime emission is suppressed. Compare close/wide day/night screenshots with fixed camera and light settings.
+
+### TE-019 — Tune oceans and directional lighting
+- [ ] Verified complete.
+- **Depends:** TE-018, TE-003. **Files:** surface uniforms, ocean-mask derivation, appearance config.
+- **Work:** add a controlled water highlight using a valid mask or an explicit conservative fallback. Tune roughness, ambient fill and light direction to preserve the reference's readable Earth and dramatic contrast.
+- **Accept / verify:** highlights do not cover whole continents, land does not gleam like water, and baked source shading does not imply a second contradictory Sun. Inspect multiple orientations and document any omitted unreliable map.
+
+### TE-020 — Add a separate cloud layer
+- [ ] Verified complete.
+- **Depends:** TE-017, TE-018. **Files:** `scene/Clouds.tsx`, cloud material.
+- **Work:** use a permitted map or original procedural field with correct alpha/color interpretation, shell spacing, lighting and deterministic artistic drift. Clouds must not intercept geographic input intended for the globe.
+- **Accept / verify:** no black fringes, clipping, obvious seam, doubled opaque planet or cloud cover obscuring every historical state. Pause/reduced-motion behavior is controllable. Record identical-seed captures and layer-off comparison.
+
+### TE-021 — Build the restrained atmosphere
+- [ ] Verified complete.
+- **Depends:** TE-018. **Files:** `scene/Atmosphere.tsx`, material/constants.
+- **Work:** implement a thin view-angle/light-weighted atmospheric shell, tuned to the reference's blue limb. Keep its artistic status explicit and distinguish it from geological atmospheric-history claims.
+- **Accept / verify:** the limb follows the sphere, is weaker where appropriate on the dark side, and is not a detached neon ring. Test wide/close views and all planned appearance presets without depth-order artifacts.
+
+### TE-022 — Implement appearance presets and emission policy
+- [ ] Verified complete.
+- **Depends:** TE-018–TE-021, TE-006. **Files:** appearance config, segmented controls, policy tests.
+- **Work:** wire Natural/After dark/Blue hour in Planet and Natural/After dark in Civilization. Separate presentation choices from age. Centralize permission for modern global city emission at P10/Today and C18 only.
+- **Accept / verify:** changing appearance preserves story/camera; forbidden combinations recover predictably. A test attempts After dark on every ancient chapter and observes no modern global lights. C17 remains a local effect later implemented in TE-039.
+
+### TE-023 — Finish background and visual hierarchy
+- [ ] Verified complete.
+- **Depends:** TE-021, TE-011. **Files:** `scene/Space.tsx`, stage fades, visual tokens.
+- **Work:** create a nearly black, sparse, seeded space background and subtle narrative-side contrast treatment. Keep the planet focal and UI sharp. Evaluate optional bloom only if the base scene already works.
+- **Accept / verify:** no dense decorative wallpaper, stars through Earth, unreadable story copy or heavy full-screen blur. Compare base/postprocessed variants and retain only measurable, visible improvements with a lower-quality fallback.
+
+### TE-024 — Verify rendering quality tiers and resource lifecycle
+- [ ] Verified complete.
+- **Depends:** TE-017–TE-023. **Files:** quality config, lifecycle tests, resource report.
+- **Work:** define useful low/medium/high tiers, DPR caps and bounded texture residency; test remounts and upgrades. Dispose materials, geometries, textures, targets and workers according to actual ownership.
+- **Accept / verify:** switching quality preserves story/camera without a blank globe. After warm-up, repeated switches do not produce an ever-growing resource count. Report texture estimates separately from measured browser data; no fabricated total-GPU-memory metric.
+
+## M3 — The Planet: real geological story progression
+
+**Exit:** all ten anchors and continuous narrative scrubbing work with distinct era-appropriate surfaces.
+
+### TE-025 — Implement piecewise geological time mapping
+- [ ] Verified complete.
+- **Depends:** TE-006, TE-010. **Files:** `story/geological-mapping.ts`, formatter/tests.
+- **Work:** map normalized positions i/9 to the ten descending Ma values, implement inverse mapping, endpoint handling and stable Ga/Ma/Today formatting. Store narrative thresholds explicitly.
+- **Accept / verify:** exact anchor and random round trips pass; ages remain finite/nonnegative; positive ages do not become Today through rounding. Clearly identify the rail as story-paced rather than proportional elapsed years. No JavaScript Date or unspecified logarithmic transform.
+
+### TE-026 — Author and review all ten Planet narratives
+- [ ] Verified complete.
+- **Depends:** TE-006, TE-003. **Files:** planet data, source records, content validator.
+- **Work:** write original concise copy for P01–P10 and intro/finale variants; verify milestone framing, dates and uncertainty with authoritative sources. Attach interpretation labels: conceptual, model-informed or modern reference.
+- **Accept / verify:** ten valid unique keys, reviewed claims and exact source links exist. Early oceans/oxygen/ice dates are not presented as exact event-years or climate predictions. No copied reference prose or placeholder citations pass release validation.
+
+### TE-027 — Build the conceptual early-Earth sequence
+- [ ] Verified complete.
+- **Depends:** TE-024, TE-025, TE-026. **Files:** `materials/early-earth*`, early-epoch parameters.
+- **Work:** implement seeded dark crust/lava, cooling and ocean emergence, then atmospheric appearance progression. Use seam-safe noise and explicit conceptual surface parameters instead of modern continents under a red overlay.
+- **Accept / verify:** P01–P03 look materially different and transition coherently; modern cities stay off. Random seeking reproduces the same state. Document artistic choices and inspect formation/midpoint/ocean screenshots against recording cues.
+
+### TE-028 — Implement the ice-world state
+- [ ] Verified complete.
+- **Depends:** TE-024, TE-026. **Files:** ice mask/material parameters, era metadata.
+- **Work:** build a visually distinct extensive-ice state and transitions to neighboring ocean/ancient-world keys. Preserve shell depth and ocean readability where appropriate.
+- **Accept / verify:** the glacier/ice appearance affects the planet, not the UI; it is not a plain white overlay disguising unchanged modern geography. Show an illustrative-extent limitation, avoid temperature metrics, and verify scrubbing into/out of the state without flashes.
+
+### TE-029 — Produce the model-informed ancient-world asset set
+- [ ] Verified complete.
+- **Depends:** TE-007, TE-017, TE-026. **Files:** offline reconstruction/rasterization scripts, masks, manifest.
+- **Work:** generate a bounded set of permitted 650–0 Ma samples/intermediates using one pinned supported model/frame. Record age, layer meaning, projection, hashes and derivation. Inspect ancient seas, convergence, Pangea, breakup, late oceans and present alignment.
+- **Accept / verify:** correct land configurations change across keys; no unsupported epoch extrapolation or plate-boundary-as-coastline substitution. Asset verification passes and all public derivatives have explicit rights/provenance.
+
+### TE-030 — Integrate smooth, cancellable geological transitions
+- [ ] Verified complete.
+- **Depends:** TE-025, TE-027–TE-029. **Files:** paleo material, scene projection, transition manager.
+- **Work:** blend canonical masks/SDFs and appearance parameters with sufficient intermediates to avoid obvious double-continent ghosts. Integrate latest-request-wins loading, correct-era previews and buffering when required.
+- **Accept / verify:** rapid forward/backward seeks never show a stale era under a new date. Midpoints visibly change land without transparent duplicate globes. Label the technique illustrative, not physical plate simulation. Capture the Pangea-to-breakup-to-present proof in-browser.
+
+### TE-031 — Wire the Planet rail and transport
+- [ ] Verified complete.
+- **Depends:** TE-025, TE-030, TE-011. **Files:** `features/planet/`, story runtime/reducer.
+- **Work:** implement ten labeled stops, continuous pointer/keyboard scrub, age readout, Go back in time, Play/Pause and Back to today. Use anchored monotonic time and defined intro/completion behavior.
+- **Accept / verify:** text, active key, age and world derive from one position. Scrubbing pauses; play is frame-rate independent; endpoints clamp; buffering re-anchors without jumps. The present intro and finale reuse P10 without adding an extra stop.
+
+### TE-032 — Pass the full ten-anchor Planet gate
+- [ ] Verified complete.
+- **Depends:** TE-026–TE-031. **Files:** Planet E2E fixtures, visual evidence.
+- **Work:** traverse all ten anchors forward/backward at multiple speeds, seek between keys and check each visible state. Review formation, ice, ancient geography, Pangea, breakup and modern Earth against the recording.
+- **Accept / verify:** all ten states are distinct and source-labeled, all timeline controls function, and no stale texture/date mismatch or premodern city emission occurs. Fix visual defects rather than approving a wrong screenshot baseline.
+
+## M4 — Civilization: eighteen complete chapters
+
+**Exit:** the entire recorded human-story sequence exists with reviewed copy, purposeful geography and rewind-safe overlays.
+
+### TE-033 — Author and source chapters C01–C06
+- [ ] Verified complete.
+- **Depends:** TE-006, TE-003. **Files:** civilization content/sources, site data.
+- **Work:** complete Africa, White Sands, cultivation, Uruk, Giza and Mohenjo-daro. Verify dates/coordinates with exact primary or site-authority sources and write original 35–65-word narratives.
+- **Accept / verify:** broad origins and multiple agricultural pathways are respected; Uruk is not an unsupported unique first. Every claim/source link and precise site coordinate is reviewable. Pending content cannot pass the release validator.
+
+### TE-034 — Author and source chapters C07–C12
+- [ ] Verified complete.
+- **Depends:** TE-006, TE-003. **Files:** civilization content/sources, routes/site data.
+- **Work:** complete Eurasian exchange, Teotihuacan, Cahokia, Polynesian voyaging, northern Chinese walls and Machu Picchu. Preserve recorded order and overlapping ranges.
+- **Accept / verify:** routes are illustrative networks, Teotihuacan is not mislabeled Aztec-built, Indigenous histories are represented, and Ming/Polynesian chapter periods are not falsely treated as the beginning of all related history. Source and coordinate checks pass.
+
+### TE-035 — Author and source chapters C13–C18
+- [ ] Verified complete.
+- **Depends:** TE-006, TE-003. **Files:** civilization content/sources, final chapter data.
+- **Work:** complete Timbuktu, 1492 Atlantic contact, Philadelphia 1776, industrialization, Pearl Street 1882 and today's night world. Include regional specificity and the limitations of historical image composites.
+- **Accept / verify:** 1492 acknowledges existing societies and consequences; 1776 does not erase slavery/exclusion; 1882 is localized. No fabricated global electrification/population claims. Final copy and exact source links receive an editorial review.
+
+### TE-036 — Build chapter-specific camera choreography
+- [ ] Verified complete.
+- **Depends:** TE-015, TE-033–TE-035. **Files:** camera presets/director/path tests.
+- **Work:** create meaningful poses for all eighteen chapters, using unit-direction interpolation and separate radius with deterministic antipodal handling. Fit the date/story layout without losing the geographic subject.
+- **Accept / verify:** each final pose exposes its intended region; no through-Earth path, pole flip, abrupt date-line jump or competing orbit controller. Manual input cancels cleanly. Inspect every chapter's final frame, not just Africa and Europe.
+
+### TE-037 — Render sites, regions, routes and labels
+- [ ] Verified complete.
+- **Depends:** TE-013, TE-033–TE-035, TE-024. **Files:** `scene/overlays/`, occlusion/route math.
+- **Work:** add subtle current-site halos, geographic labels, broad illustrative regions and a few story-network arcs. Implement finite-camera Earth occlusion, viewport clipping and label collision handling.
+- **Accept / verify:** far-side geometry/text does not show through Earth; labels do not obscure the main story or become a pin forest. Region/route data are not presented as political borders, traffic or population density. Test limb and antimeridian cases.
+
+### TE-038 — Implement the human-footprint card and rewind rules
+- [ ] Verified complete.
+- **Depends:** TE-037, TE-006. **Files:** footprint UI, pure overlay membership selector/tests.
+- **Work:** build current-story-regions and earlier-story-sites toggles with a concise illustrative-data disclaimer. Derive the visible set solely from active chapter and preferences, not an irreversible visited-sites accumulator.
+- **Accept / verify:** toggles actually change independent layers. Seeking backward removes future features; repeated random chapter orders produce the same final set. Disabled/current states are accessible and visually understated like the recording.
+
+### TE-039 — Distinguish local electrification from the modern finale
+- [ ] Verified complete.
+- **Depends:** TE-022, TE-035, TE-036, TE-037. **Files:** chapter appearance policy, local light effect, finale config.
+- **Work:** stage a localized Pearl Street pulse for C17 and a deliberate pullback/city-emission reveal at C18. Connect the night texture's historical observation-period credit.
+- **Accept / verify:** global modern lights cannot appear in C01–C17 even when After dark is selected. C18 shows recognizable fine city patterns without excessive bloom. Rewinding from C18 immediately removes forbidden emission.
+
+### TE-040 — Integrate the intro and eighteen-chapter journey
+- [ ] Verified complete.
+- **Depends:** TE-033–TE-039, TE-031. **Files:** Civilization intro/rail/narrative, story reducer/runtime.
+- **Work:** connect the unnumbered introduction, all eighteen authored records, count, date, camera and overlays to the shared transport. Preserve approximate/range labels instead of interpolating fabricated precise dates.
+- **Accept / verify:** intro is not chapter nineteen, the visible counter matches the selected ID, and all chapters are reachable in both directions. Dates with overlapping ranges remain in editorial order. Playback completion stops at C18.
+
+## M5 — Complete interaction and narrative integration
+
+**Exit:** the app behaves as one coherent product, with no disconnected controls or competing animations.
+
+### TE-041 — Unify playback and speed controls
+- [ ] Verified complete.
+- **Depends:** TE-031, TE-040. **Files:** shared transport controls, speed menu/runtime tests.
+- **Work:** connect both visible Play/Pause locations to one state, implement 1×/2×/5×, replay/end states and continuous speed changes. Bound camera transition duration so fast playback still reaches each subject.
+- **Accept / verify:** no duplicate timers or divergent button labels. Pause freezes story progress; a speed change never jumps position. Verify both controls, all speeds, buffering and completion using a fake monotonic clock plus a real browser.
+
+### TE-042 — Resolve wheel, drag, touch and panel input ownership
+- [ ] Verified complete.
+- **Depends:** TE-015, TE-031, TE-040. **Files:** input routing adapter, interaction tests.
+- **Work:** implement stage-wheel time travel, debounced Civilization chapter steps, timeline pointer capture, globe orbit and touch pinch. Keep plus/minus zoom; preserve browser Ctrl/Cmd zoom and normal panel/page scrolling.
+- **Accept / verify:** one gesture never both scrubs and orbits/zooms. Manual globe input cancels scripted camera and pauses story before applying input. Test trackpad bursts, touch cancellation, drag release outside the rail and focused form controls.
+
+### TE-043 — Build All chapters and previous/next navigation
+- [ ] Verified complete.
+- **Depends:** TE-040, TE-011. **Files:** `features/story/ChapterDrawer.tsx`, navigation tests.
+- **Work:** show all eighteen titles, date labels and regions in an accessible drawer/dialog, with active state and keyboard focus management. Selecting a row closes the drawer and enters that chapter paused.
+- **Accept / verify:** all entries are actionable, previous/next clamps at the ends and no hidden wrap creates a nonexistent chapter. Focus returns predictably. The panel's detailed design is explicitly a Terra completion, since the recording does not show it open.
+
+### TE-044 — Build Sources and contextual story explanations
+- [ ] Verified complete.
+- **Depends:** TE-026, TE-033–TE-035, TE-011. **Files:** sources/credits UI and source selector.
+- **Work:** implement Sources sections for Story, Imagery and Reconstruction; Read the record/Behind the story opens active context, limitations and exact citations. Include observation periods and asset attribution.
+- **Accept / verify:** links are real, relevant and clearly external; no placeholder source button. Opening pauses story/camera and closing remains paused. Keyboard focus, long URLs/titles, mobile scrolling and unavailable-link handling are reviewed.
+
+### TE-045 — Synchronize narrative and date transitions
+- [ ] Verified complete.
+- **Depends:** TE-031, TE-040, TE-011. **Files:** shared narrative transition components, date layout.
+- **Work:** bind headline/body/date/context to one scene projection, with short restrained fades and stable block sizing. Handle long century ranges, overlapping date windows and intro/finale copy variants.
+- **Accept / verify:** no previous headline describing the new chapter after settled transition; no UI jumping or duplicate screen-reader announcements from outgoing text. Fast reverse seeks and 200% text zoom preserve a readable single active narrative.
+
+### TE-046 — Finish section switching and bookmarks
+- [ ] Verified complete.
+- **Depends:** TE-041, TE-045. **Files:** section reducer, session bookmark state.
+- **Work:** implement first-visit intros, paused section restoration and cancellation of in-flight camera/asset work. Keep quality/accessibility preferences separate and normalize unsupported appearance modes on switch.
+- **Accept / verify:** Planet Blue hour does not leak as a nonexistent Civilization control. Rapid switching never resurrects a stale texture/chapter; returning to a section restores its intended bookmark paused. Fresh visits still open present-day Planet.
+
+### TE-047 — Finish compact utilities and help
+- [ ] Verified complete.
+- **Depends:** TE-042–TE-046. **Files:** settings/help/reset utilities, control inventory.
+- **Work:** complete reset-view, accessible zoom, concise interaction help and any retained fullscreen utility with a clear exit. Remove unexplained source-video/capture controls and unused icons instead of shipping inert imitations.
+- **Accept / verify:** every visible primary utility has a real behavior, tooltip/name and keyboard path. Fullscreen denial fails gracefully; Escape/touch exit work. Reset changes the current camera only unless the action explicitly promises a full story reset.
+
+### TE-048 — Pass the combined first-session and cancellation gate
+- [ ] Verified complete.
+- **Depends:** TE-041–TE-047, TE-032. **Files:** integrated E2E journey, fidelity ledger.
+- **Work:** run opening → deep time → scrub → Civilization intro → several chapters → All chapters → source context → night finale → rewind. Interleave orbit, speed changes and section switches.
+- **Accept / verify:** all controls affect real state, one camera/clock owns motion, and no stale story/asset/overlay survives cancellation. Record representative screenshots and fix material layout/interaction differences before hardening.
+
+## M6 — Responsive, accessible, resilient and efficient
+
+**Exit:** the full story works beyond one desktop happy path, with measured resource behavior.
+
+### TE-049 — Complete narrow and touch layouts
+- [ ] Verified complete.
+- **Depends:** TE-048. **Files:** responsive shell, rails, drawers/styles.
+- **Work:** build intentional mobile portrait/landscape layouts, readable story/date, usable globe and scoped timeline scrolling. Use dynamic viewport/safe-area handling and allow normal page scrolling where needed.
+- **Accept / verify:** 390×844, 360×800 and landscape views have no body-level horizontal overflow, trapped page or inaccessible playback. Long chapter dates and opened panels remain usable. Label this as a Terra-specific responsive design, not a verified source layout.
+
+### TE-050 — Complete keyboard and assistive-technology paths
+- [ ] Verified complete.
+- **Depends:** TE-043, TE-044, TE-049. **Files:** accessibility helpers, component tests.
+- **Work:** provide meaningful slider semantics, chapter list/prev-next, zoom/reset, tab navigation, panel focus containment/return and text equivalents for the canvas. Use visible focus and no color-only states.
+- **Accept / verify:** the complete story can be traversed without dragging. Editable controls are not hijacked by shortcuts; screen readers receive one current chapter/date. Run automated checks and a manual keyboard journey; an automated score alone is insufficient.
+
+### TE-051 — Respect reduced motion and page visibility
+- [ ] Verified complete.
+- **Depends:** TE-041, TE-036, TE-049. **Files:** motion policy, visibility handling/tests.
+- **Work:** disable automatic camera flyovers/pulses under reduced motion while preserving all content; pause/re-anchor when hidden or when panels open. Respect user preference changes during a session.
+- **Accept / verify:** returning from a hidden tab or closing a modal never fast-forwards or unexpectedly resumes. Reduced motion yields stable readable chapters, not missing functionality. Test mid-transition toggles and long simulated hidden intervals.
+
+### TE-052 — Add validated reproducible scene links
+- [ ] Verified complete.
+- **Depends:** TE-046, TE-006. **Files:** versioned serialization/schema, Share utility.
+- **Work:** serialize bounded section/position/chapter/camera/appearance/overlay data into a static-host-safe URL. Imported scenes open paused; quality stays a local preference. Provide selectable-link fallback when clipboard access fails.
+- **Accept / verify:** fresh-profile round trips reproduce scene content; malformed, oversized, unknown-version and unknown-ID inputs recover safely. No arbitrary external assets, executable expressions, secrets or user identifiers can enter the scene through the URL.
+
+### TE-053 — Harden buffering, retries and stale requests
+- [ ] Verified complete.
+- **Depends:** TE-030, TE-017, TE-046. **Files:** asset state machine, failure UI/tests.
+- **Work:** test delayed/missing/corrupt textures, rapid random seeks and canceled upgrades. Use era-correct preview or explicit buffering; freeze/re-anchor effective transport while required assets are unavailable.
+- **Accept / verify:** retry is actionable, no infinite spinner/fake percentage appears, and a late obsolete request cannot overwrite the current chapter. Text/date cannot silently describe an unrelated old globe. Record deterministic forced-failure browser tests.
+
+### TE-054 — Complete non-WebGL and context-loss recovery
+- [ ] Verified complete.
+- **Depends:** TE-012, TE-044, TE-050. **Files:** fallback story reader, error boundary, context lifecycle.
+- **Work:** provide a useful accessible story/source reader and a real Terra poster where graphics are unavailable. Handle context loss/restoration without stale ready flags, duplicate loops or inaccessible modal overlays.
+- **Accept / verify:** visitors can still read all chapters/sources rather than see a blank rectangle. Simulated unsupported WebGL and context events produce accurate status/retry behavior. Do not call a static fallback a functioning 3D renderer.
+
+### TE-055 — Establish real-device performance evidence
+- [ ] Verified complete.
+- **Depends:** TE-048, TE-024. **Files:** measurement harness/report, performance notes.
+- **Work:** profile the production build on named available hardware/browser/DPR/quality after warm-up. Measure frame-time distributions, transfer sizes, input stalls and resource counts during representative journeys.
+- **Accept / verify:** report method, sample duration and device conditions; distinguish rAF frame timing, CPU/GPU diagnostics and estimates. Headless software rendering is not a laptop GPU benchmark. Record targets missed and prioritize concrete fixes rather than publishing unmeasured 60-fps claims.
+
+### TE-056 — Tune adaptive quality and resource budgets
+- [ ] Verified complete.
+- **Depends:** TE-055, TE-053, TE-024. **Files:** quality controller, residency policy, optimization evidence.
+- **Work:** fix measured hot loops, redundant React rerenders, oversized textures and unbounded prefetch. Add conservative quality downgrade/recovery with hysteresis and manual override; verify fallback decompression costs.
+- **Accept / verify:** tiers stay useful, do not oscillate or reset the story, and meet documented budgets or explain residual blockers. Show before/after evidence and stable resource counts over repeated journeys. Do not remove required content to fake a performance win.
+
+## M7 — Comprehensive quality and reference verification
+
+**Exit:** all core behavior and visible states are verified in the production build, with honest evidence.
+
+### TE-057 — Complete pure numerical and state tests
+- [ ] Verified complete.
+- **Depends:** TE-025, TE-040, TE-052, TE-053. **Files:** unit/property tests.
+- **Work:** cover coordinate/UV anchors, piecewise mapping/inverse, date tags, authored order, transport continuity, overlay membership, emission policy, serialization and loader generations. Exercise 30/60/144Hz schedules with identical final monotonic time.
+- **Accept / verify:** invariants and boundary/negative cases pass without loosening tolerances to hide bugs. No expected value is generated by calling the same function under test. Record test counts/results and deterministic seeds.
+
+### TE-058 — Complete component and accessibility tests
+- [ ] Verified complete.
+- **Depends:** TE-050, TE-051. **Files:** UI tests and manual audit record.
+- **Work:** test both transport controls, rail semantics, speed menu, section tabs, chapter drawer, source panel, focus behavior, long copy and reduced-motion variants. Audit contrast/target sizes in rendered context.
+- **Accept / verify:** keyboard-only users can reach every story state and leave every panel; no hidden duplicate active content remains in the accessibility tree. Automated and manual results are separate and accurately recorded.
+
+### TE-059 — Exercise all ten anchors and eighteen chapters end-to-end
+- [ ] Verified complete.
+- **Depends:** TE-048, TE-053, TE-057. **Files:** production-build Playwright suite.
+- **Work:** enumerate every story ID, assert headline/date/active rail/scene revision/appearance permissions, then test reverse/random order, fast playback, modal pauses, camera interruption and section restoration.
+- **Accept / verify:** 10+18 states plus both intros pass on a clean browser profile. Tests wait for the intended GPU-ready revision rather than arbitrary sleep alone. Missing chapters, dead buttons and future-light leaks block release.
+
+### TE-060 — Perform recording-to-implementation visual review
+- [ ] Verified complete.
+- **Depends:** TE-032, TE-048, TE-049, TE-056. **Files:** visual fixtures, mismatch ledger, curated screenshots.
+- **Work:** capture the specified reference checkpoints with fixed viewport, seed, quality and state. Inspect actual source reference and current render side by side for globe framing, geography, material, type, date, CTA and rail.
+- **Accept / verify:** fix material mismatches rather than blessing them as baselines. Distinguish intentional original copy/branding/mobile panels from accidental drift. Exclude external X/macOS chrome. Record source timestamp, test state and at least five concrete comparisons per major screen family.
+
+### TE-061 — Stress race conditions and lifecycle recovery
+- [ ] Verified complete.
+- **Depends:** TE-053, TE-054, TE-056, TE-059. **Files:** stress suite and resource report.
+- **Work:** run at least twenty warm-state cycles of chapter/quality/section changes, delayed seek responses, cancellation, mount/unmount where applicable and context recovery. Inspect listener, worker, renderer and texture ownership.
+- **Accept / verify:** no monotonically growing owned-resource count, stale current scene, duplicate clock, leaked future overlay or dead recovery UI. Document normal cache warm-up separately from leaks; an unexplained rising count is not dismissed as browser caching.
+
+### TE-062 — Verify cross-browser and real static-path behavior
+- [ ] Verified complete.
+- **Depends:** TE-059, TE-049, TE-054. **Files:** browser matrix, build/preview deployment fixtures.
+- **Work:** test Chromium, Firefox and available WebKit/Safari paths, root and `/terra/` builds, fresh reloads, scene hashes, asset/transcoder paths and panel navigation. Record actual engines/versions, not assumed platform support.
+- **Accept / verify:** no development-server-only success, root-relative asset 404s, unsupported WebGL crash or broken copied link. Playwright WebKit and real Safari/iOS checks are reported distinctly. Unavailable real-device coverage remains an explicit limitation.
+
+### TE-063 — Audit content, provenance and interpretation labels
+- [ ] Verified complete.
+- **Depends:** TE-026, TE-033–TE-035, TE-029, TE-044. **Files:** content/assets validators, review ledger.
+- **Work:** check every chapter claim/date/source, coordinate provenance, image observation period, reconstruction model/frame/range, license/credit and conceptual/illustrative label. Review culturally sensitive framing and copied-text risk.
+- **Accept / verify:** pending production records fail; no arbitrary precision, fake live labels, population-map claims or blanket MIT grant over external assets remains. Exact source links and required attributions are accessible in the app and docs.
+
+### TE-064 — Sign off the release candidate
+- [ ] Verified complete.
+- **Depends:** TE-057–TE-063. **Files:** `docs/PROGRESS.md`, release-candidate report.
+- **Work:** perform the complete first-session journey on a clean production build with no test bridge, verify all visible controls, inspect desktop/mobile and review unresolved issues by severity.
+- **Accept / verify:** no P0/P1 functional, factual or visual blocker remains; any lesser limitation is explicit. Record commit/build/test evidence and intentional design differences. Do not confuse a finished candidate with a deployed public site.
+
+## M8 — Portfolio presentation and verified release
+
+**Exit:** a reproducible, credited, tested project with real media and a verified deployment or a precisely documented permission blocker.
+
+### TE-065 — Write the actual portfolio README and case study
+- [ ] Verified complete.
+- **Depends:** TE-064. **Files:** `README.md`, engineering case study.
+- **Work:** replace planning language only for genuinely shipped features. Explain the dual timeline, model-informed continent pipeline, state/asset cancellation and accessibility/performance decisions with concise real examples.
+- **Accept / verify:** no invented testimonials, source-framework certainty, live-data label or unmeasured FPS claim. Setup commands reproduce the app. Distinguish inspiration, independent implementation, scientific approximations and third-party assets clearly.
+
+### TE-066 — Capture original Terra screenshots and demo
+- [ ] Verified complete.
+- **Depends:** TE-060, TE-064. **Files:** curated permitted project media.
+- **Work:** capture the actual Terra opening, formation, ice, Pangea, representative human chapters and modern night finale; create a roughly 30–60-second clean demo with intentional pacing and no private desktop data.
+- **Accept / verify:** media depicts the running implementation, not source recording/concept art. Crop appropriately, optimize sizes, provide alt text/captions and retain relevant credit context. Verify playback and links before embedding in the README.
+
+### TE-067 — Publish meaningful CI checks
+- [ ] Verified complete.
+- **Depends:** TE-057–TE-063. **Files:** `.github/workflows/`, CI notes.
+- **Work:** implement pinned/reviewed workflow actions for install, lint, type, unit, asset/content/docs validation, build and configured browser suites. Cache safely and upload diagnostic failures with bounded retention.
+- **Accept / verify:** a real CI run passes on the intended commit; deliberate negative checks fail in development verification. No skipped critical suite or dummy success is represented as coverage. Secrets are unnecessary for the core build.
+
+### TE-068 — Implement static deployment workflow
+- [ ] Verified complete.
+- **Depends:** TE-062, TE-067. **Files:** Pages deployment workflow, deployment runbook.
+- **Work:** configure production `dist` and `/terra/` base using current official deployment guidance. Inspect repository Pages/settings permissions before changing authorized configuration; preserve unrelated settings.
+- **Accept / verify:** workflow artifacts contain the correct static paths and use minimal required permissions. Record any unavailable setup action as a blocker. Creating a workflow is not proof the site is deployed.
+
+### TE-069 — Finalize licenses, credits and repository navigation
+- [ ] Verified complete.
+- **Depends:** TE-063, TE-065. **Files:** code license if finalized, asset notices, docs index, issue index.
+- **Work:** finalize original-code licensing separately from imagery/model/font terms, make credits discoverable, update the documentation/epic map and remove obsolete active-plan links. Prepare an accurate repository description/demo reference only where permissions allow.
+- **Accept / verify:** no old solar-lab task is presented as current; all internal links resolve. External notices and source credits are retained. Do not change Jordan's profile pins or other repositories without separate authorization.
+
+### TE-070 — Verify the public deployment
+- [ ] Verified complete.
+- **Depends:** TE-068, TE-064. **Files:** deployment evidence and public smoke report.
+- **Work:** open the actual deployed URL from a clean browser, verify assets, chapter links, refresh, both story journeys, source links and no console/network failures. Test a copied scene URL independently.
+- **Accept / verify:** a real public URL and tested commit are recorded only after success. When permissions/services prevent deployment, mark this task blocked with the exact failure and reproducible build evidence; never invent a live URL or mark deployment done anyway.
+
+### TE-071 — Audit clean-install and distribution hygiene
+- [ ] Verified complete.
+- **Depends:** TE-067, TE-069. **Files:** clean-check report, ignore rules, distribution audit.
+- **Work:** install/build/test from a clean checkout using documented versions. Inspect shipped bundle/repo for unused dependencies, test-only mutation APIs, secrets, private paths, abandoned experiments and oversized raw assets.
+- **Accept / verify:** no 348 MB source recording, unlicensed frame dump or irrelevant infrastructure is included. Required scripts and local assets work without hidden machine state. Record real outputs and remove transient QA dumps while preserving curated evidence.
+
+### TE-072 — Publish the final implementation handoff
+- [ ] Verified complete.
+- **Depends:** TE-065–TE-071. **Files:** final `PROGRESS.md`, release notes, final README links.
+- **Work:** reconcile every TE checkbox with implementation evidence, summarize the actual 10+18 experience, tests, visual comparisons, measured performance, assets and deployment. Publish release/tag only when appropriate permissions and gates pass.
+- **Accept / verify:** no blocked task is silently counted done. A deployment-blocked handoff remains an explicitly incomplete public release. State remaining original-source/mobile/device uncertainties accurately. Optional experimentation must not replace this core completion audit.
+
+## Deferred, not required for this goal
+
+Full physical plate-motion interpolation, WebGPU, terrain landing, VR, narrated audio, live weather, population simulation and a solar-tilt lab are separate future decisions. Do not expand into them before the recording-based product passes its core gates. Original-code polish and reliable storytelling are more important than a larger feature count.

@@ -1,78 +1,71 @@
-# Terra progress and evidence ledger
+# Terra v2 progress and evidence
 
-## Planning snapshot — 2026-09-06
+## Current snapshot — recording-based planning revision
 
 | Area | Actual status |
 | --- | --- |
-| Repository | Confirmed initially empty/public/writable through the GitHub connector; planning packet being established on `main` |
-| User goal | Fun, impressive Earth-simulator GitHub portfolio project |
-| Original X post/video | Access attempted; contents and frames not retrieved |
-| Original application's technology/features | Unknown; no claims of verified reverse engineering |
-| Terra proposed baseline | Specified: cinematic Earth observatory plus educational sunlight lab |
-| Architecture/design/model/task planning | Written in the accompanying documents |
-| Core implementation tasks | 0 of 62 verified complete at planning time |
-| Optional extensions | 0 of 8 implemented; excluded from core goal |
-| Application source | Not implemented |
-| Runtime dependency versions | Not installed/verified for Terra yet |
-| Production assets | Not acquired or committed |
-| Numerical/browser/performance tests | Not implemented or run |
-| Visual concepts/app screenshots/demo | Not produced |
-| CI/deployment/release | Not implemented or verified |
+| User goal | Fun, polished, independently built Earth-history project for Jordan Davis's GitHub portfolio |
+| Supplied screen recording | Decoded and visually inspected across the 83.281792-second upload, with enlarged screen/text review |
+| Recording identity | 2940×1912 H.264, reported 60/1 fps, AAC; 348,351,663 bytes; checksum in reference/recording-manifest.json |
+| Visual/reference analysis | Delivered: screen anatomy, approximate timestamp ledger, ten Planet anchors, eighteen Civilization chapters, Grok-prompt comparison |
+| Original live app/source/comments | Not inspected; framework/font/exact hidden behavior remains unverified |
+| Scope | Corrected to cinematic Planet/Civilization narratives; old observatory/solar-lab requirements retired |
+| Active planning | 72 TE tasks in nine epics; detailed product/visual/content/architecture/state/assets/QA specifications |
+| Application tasks | **0 of 72 verified complete** in this planning revision |
+| App source/runtime dependency installation | Not implemented or verified |
+| Production imagery/reconstruction assets | Candidate sources researched; actual runtime files/terms/derivatives not acquired or verified |
+| Full eighteen-chapter historical editorial review | Required during implementation; observed source labels are not blanket historical fact certification |
+| Unit/browser/visual/accessibility tests | Specified, not implemented or run for Terra |
+| Real-device frame rate/load/GPU behavior | Not measured; no performance claim |
+| Actual Terra screenshots/demo | Not produced; source-review frames are not Terra screenshots |
+| CI/public deployment/release | Not implemented or verified |
 
-The planning documents are deliverables, not proof that their described code or tests exist. GitHub milestone issues are navigation/tracking wrappers around `ROADMAP.md`.
+The initial plan guessed the wrong subtype of Earth simulator because the video was unavailable. The uploaded recording now establishes the correct two-part narrative. That visual-access limitation is resolved for the supplied recording; do not keep calling the reference wholly inaccessible. Unrecorded original source code and live interactions remain a different limitation.
 
-## Open risks and next actions
+## Completed planning evidence
 
-| Risk | Impact | Owner/task | Next action |
-| --- | --- | --- | --- |
-| Reference video inaccessible | Cannot verify source appearance or feature parity | TR-001 | Inspect legitimate accessible media in implementation environment; otherwise preserve baseline limitation |
-| Exact asset items/rights not finalized | Could block texture shipment | TR-002/TR-020 | Verify specific source files, credits, terms and hashes |
-| Coordinate/API implementation not tested | Risk of wrong terminator or mirrored geography | TR-005/TR-015/TR-031 | Verify API conventions and independent numerical fixtures |
-| Visual target is a written proposal only | Risk of generic or inconsistent UI | TR-004 | Establish full desktop/mobile visual targets before detailed UI work |
-| Real-device performance unmeasured | No credible FPS/mobile claims yet | TR-060/TR-065 | Measure production build on named available hardware |
-| Pages settings/permissions not verified | Public deployment may need authorized configuration | TR-074 | Inspect permissions/settings at deployment stage; report precise blocker if any |
+Recording SHA-256: `d914fc281e92e6366f23b617236e9a03a4bfdbe48d02e2dbda53aad4ed8964b7`.
+
+Visual review used decoded four-second and one-second samples, contact sheets and enlarged individual screens. Timestamps in REFERENCE_ANALYSIS.md are approximate upload-relative positions. Audio was not transcribed. Raw media and extracted reference images were not committed to this public repository.
+
+Published planning artifacts define all ten geological anchors, all eighteen human chapters, original Terra copy directions, observable versus proposed controls, piecewise story time, camera/input ownership, ancient-world asset requirements, historical-light guards, source interpretation and concrete acceptance tests. The roadmap deliberately starts implementation checkboxes unchecked.
+
+## Risk register and next actions
+
+| Risk | Impact | Tasks / next action |
+| --- | --- | --- |
+| Exact texture/model rights not finalized | May block runtime asset distribution | TE-003 / TE-007: prove specific files, terms, projections and derived outputs |
+| Ancient-land transition quality | Main visual fidelity risk | TE-007 / TE-029 / TE-030: low-res proof, pinned model, intermediate masks and browser comparison |
+| Historical date/copy/source review incomplete | Risk of unsupported narratives | TE-026 / TE-033–TE-035 / TE-063: exact authoritative sources and original concise prose |
+| Clock/camera/async race conditions | Wrong chapter or stale geography after input | TE-025 / TE-030 / TE-041 / TE-053: shared projection, cancellation and generation tests |
+| Future markers or modern lights in earlier eras | Misleading historical visualization | TE-022 / TE-038 / TE-039 / TE-059: centralized permissions and rewind invariants |
+| Mobile/panel design absent from source demonstration | Must design useful equivalents | TE-005 / TE-043 / TE-044 / TE-049: label original completions and test them |
+| Performance unmeasured | Cannot promise universal 60 fps | TE-055 / TE-056: named real-device production measurements |
+| Pages permissions/public availability | Deployment may require authorized settings | TE-068 / TE-070: inspect capability, deploy and verify or report exact blocker |
+| Original stack/hidden behavior unknown | Limits source-identity claims, not independent implementation | Keep explicit in reference analysis; do not block all work retrying X |
 
 ## Task evidence format
 
-Add entries as work actually occurs. Use statuses `not_started`, `in_progress`, `blocked` or `done`.
-
 ```text
-Task ID:
-Status:
-Date:
-Branch / commit:
+Task ID and status (not_started / in_progress / blocked / done):
+Commit / branch and date:
 Files changed:
-Implementation summary:
-Commands run and exit/results:
-Numerical fixture/source details where applicable:
-Browser / OS / GPU-or-software-renderer / viewport / DPR / quality:
-Screenshot, trace or report paths:
-Visual review and fixes:
+Implemented behavior:
+Commands actually run and results:
+Content/asset/model provenance where applicable:
+Browser / OS / hardware / renderer / viewport / DPR / quality:
+Fixture story state and seed:
+Screenshot / trace / report location:
+Reference timestamp and visual comparisons:
 Acceptance criteria satisfied:
-Remaining blocker or uncertainty:
+Remaining blocker / limitation:
 Next dependency-ready task:
 ```
 
-A task marked done must link actual evidence. Keep commit IDs and local evidence paths accurate; do not invent uploaded artifacts or public URLs. Avoid recording secrets or personal machine paths.
+A done task needs actual evidence. Do not create fictional output logs or public artifact URLs. Keep private machine paths, credentials and recording/desktop data out of published evidence. Use curated test artifacts, not enormous transient trace dumps in normal Git history.
 
-## Milestone handoff format
+## Handoff and release distinction
 
-```text
-Milestone:
-Tasks done / total:
-Actual user-visible behavior:
-Tests and outcomes:
-Visual baseline comparison:
-Performance/resource observations:
-Asset/provenance changes:
-Known regressions or blockers:
-Next milestone entry criteria:
-```
+Recording analysis is delivered. Implementation fidelity is not yet verified because Terra has not been built. A future release report must separately state: implemented tasks, tested story states, visual comparison results, asset/content review, measured performance, CI commit and public deployment verification.
 
-## Reference fidelity ledger
-
-Current state: **unverified**. No source video frames have been inspected. Completion of Terra's proposed baseline must not change this status automatically. Update it only with actual inspected reference evidence and a documented comparison.
-
-## Final release record
-
-Not yet available. Populate after implementation with release commit/tag, actual build/test evidence, verified demo URL or deployment blocker, media paths, supported browser/device matrix, measured performance and known limitations.
+A successful local build or Pages workflow file does not equal a deployed site. TE-070 may be blocked by permissions; in that case report a deployment-blocked handoff rather than marking all 72 tasks done or inventing a demo URL. Optional extras are not prerequisites and must not obscure unfinished core work.

@@ -1,174 +1,123 @@
-# ASTRA autonomous build goal
+# ASTRA execution goal — Terra v2
 
-## Before starting
-
-Open this repository in the implementation environment. The initial repository contains documentation only. The `/goal` below instructs implementation; it is not a request to generate another plan. All versions, assets and environment capabilities must be verified when the build starts.
-
-The exact X reference remains inaccessible from the planning environment. Reattempt it once through available legitimate browser access, document the outcome, and continue with the proposed baseline if still blocked. Never invent source-video observations or describe proposed Terra features as observed ones.
-
-## Copy-ready goal
+This is the canonical implementation prompt. It replaces the earlier observatory/sunlight-lab baseline. Read the current repository before changing files; this planning revision does not contain a running application.
 
 ```text
-/goal Implement Terra in this repository as a polished, portfolio-quality,
-client-only Earth observatory and educational sunlight sandbox.
+/goal Build Terra into a polished, cinematic, interactive Earth-history
+portfolio website in jdavis-software/terra. Follow AGENTS.md and the
+recording-based v2 specifications. Execute TE-001 through TE-072 in
+docs/ROADMAP.md with actual implementation and verification evidence.
 
-Read AGENTS.md and the complete documentation index in docs/README.md.
-Then read REFERENCE_ANALYSIS.md, PRODUCT_SPEC.md, VISUAL_SPEC.md,
-ARCHITECTURE.md, SIMULATION_SPEC.md, ASSETS_AND_SOURCES.md,
-ROADMAP.md, QA_AND_RELEASE.md, DECISIONS.md and PROGRESS.md.
-Treat these files as the implementation contract, not as a suggestion
-to produce another planning response.
+The actual reference is a two-part narrative website, not a sunlight lab.
+Use docs/REFERENCE_ANALYSIS.md for the inspected recording evidence,
+docs/VISUAL_SPEC.md for its composition, and docs/STORY_CONTENT.md
+for the complete ten-anchor/eighteen-chapter inventory. Do not execute
+obsolete TR tasks or restore UTC clocks, tilt sliders, astronomy adapters
+or dashboard features from the superseded plan.
 
-USER INTENT
-Build an impressive, genuinely interactive GitHub portfolio project for
-Jordan Davis. The experience must feel like a cinematic observatory,
-not a generic dashboard containing a rotating globe. Make the default
-view beautiful, the interactions responsive, and the engineering
-credible and explainable.
+Build The Planet and Civilization. Preserve the reference's minimal
+editorial composition: original terra. wordmark, two central navigation
+items, Sources, an enormous live globe on the right, elegant light-weight
+sans-serif story text on the left, contextual date at upper right and a
+bottom timeline. Use original prose and independently permitted assets,
+not the creator's branding, copied code or source-video frames.
 
-REFERENCE HONESTY
-The inspiration is:
-https://x.com/akshdeeps_001/status/2096776530005488028
-https://x.com/akshdeeps_001/status/2096776530005488028/video/1
-The planning environment could not inspect this video. No source
-frames, original stack or feature inventory have been verified.
-Attempt legitimate access in the current browser. If successful,
-create an actual timestamped evidence ledger and compare it with the
-proposed baseline. If unsuccessful, record that explicitly and keep
-building the specified Terra baseline. Never fabricate timestamps,
-controls, source code, playback observations or a parity claim.
-Do not redistribute the reference video or restricted assets.
+The Planet starts at present day and travels through these exact rail
+anchors: 4.54 Ga, 4.3 Ga, 2.4 Ga, 650 Ma, 540 Ma, 400 Ma, 300 Ma,
+200 Ma, 100 Ma and Today. Implement piecewise narrative spacing,
+real scrubbing/play/pause and distinct world states: formation/lava,
+oceans, atmospheric change, extensive ice, ancient continents,
+convergence, Pangea, breakup, later oceans and modern Earth.
+Natural, After dark and Blue hour are artistic appearance presets.
 
-SCOPE
-Complete the 62 core tasks in docs/ROADMAP.md, M0 through M7, in
-safe dependency order. The eight extension tasks TR-080 through
-TR-087 are not required and must not distract from core completion.
-Build the app, not just scaffolding, mockups, screenshots or docs.
+Civilization has an unnumbered introduction and exactly eighteen
+chapters: African origins; White Sands; cultivation/settlement; Uruk;
+Giza; Mohenjo-daro; East/Central Asian exchange; Teotihuacan; Cahokia;
+Polynesian navigation; northern Chinese walls; Machu Picchu; Timbuktu;
+1492 Atlantic contact; Philadelphia 1776; industrial transformation;
+Pearl Street 1882; and today's night-lit planet. Preserve the authored
+order and approximate/overlapping date ranges. Give each chapter
+appropriate camera framing, subtle illustrative regions/sites/routes,
+source context and real navigation. End with a deliberate city-lights reveal.
 
-The core experience must include:
-- A real textured Earth with coherent day/night city lights, clouds,
-  restrained atmosphere, decorative stars and smooth orbit/zoom.
-- One authoritative UTC simulation clock with play/pause, speeds,
-  daily scrubbing, date/time input, Now and reset.
-- Searchable curated places, accurate point picking, safe fly-to,
-  useful location inspection and keyboard equivalents.
-- A clearly labeled educational sunlight lab with tilt, season,
-  solar-day duration, phase and a normalized daily sunlight curve.
-- Functional layers, deterministic presets, a user-started cinematic
-  tour, photo mode, actual image export and validated scene URLs.
-- A complete mobile interface, reduced-motion behavior, capability
-  fallbacks, honest loading/errors and a credible performance story.
-- Tests, CI, source credits, actual screenshots/demo media, an
-  engineering case study and verified static deployment where the
-  environment has the required authorization.
+Use React, strict TypeScript, Vite and Three.js/React Three Fiber with
+verified compatible pinned versions and one lockfile. This is Terra's
+stack choice, not a verified claim about the original app. Keep runtime
+client-only and assets same-origin. No backend, accounts, database,
+AI API, paid service, Temporal, live weather or unrelated infrastructure.
 
-DEFAULT ARCHITECTURE
-Use one React + strict TypeScript + Vite application. Use Three.js
-through React Three Fiber, narrow Drei helpers, Zustand only for
-low-frequency application state and Astronomy Engine behind an
-adapter. Use WebGL2/GLSL as the baseline. Verify compatible stable
-versions, pin the runtime/package manager and commit one lockfile.
-Do not create a monorepo or add a backend, auth, database, billing,
-Temporal, paid map services, AI runtime calls or an orchestration
-framework. WebGPU and terrain are optional later experiments.
+Implement docs/SIMULATION_SPEC.md: one authoritative monotonic
+transport drives text/date/rail/assets/overlays; one camera director
+arbitrates scripted and manual motion; both visible Play/Pause buttons
+share state. Manual orbit cancels scripted motion and pauses playback.
+Scrubbing pauses; opening panels, switching sections and tab hiding
+pause/re-anchor. Speed changes remain continuous. Never let an old
+texture request overwrite a newer seek, or show a new era's date over
+an unrelated stale globe without a truthful buffering state.
 
-NUMERICAL CONTRACT
-Honor docs/SIMULATION_SPEC.md exactly unless a documented correction
-is required. North is +Y, zero longitude is +X and east-positive
-90 degrees is -Z. Keep the Earth fixed and transform the Sun into
-its frame. Do not rotate both Earth and Sun for the same day.
-Camera motion must not change sunlight at a selected point.
-Keep one anchored monotonic simulation clock, not frame-count time.
-Materials, readouts and curves must share the same model inputs.
-Validate the astronomy adapter with independently sourced fixtures.
-Do not mix J2000 and of-date coordinates or radians/degrees/hours.
-Lab time is hypothetical, not UTC. Artistic atmosphere/cloud effects
-are not climate physics. Do not invent temperatures, live weather,
-population statistics or performance numbers.
+The hardest visual requirement is changing continental arrangements,
+not spinning or recoloring a modern map. Prove a low-resolution
+Pangea-to-breakup-to-present path early. Use a pinned supported
+paleogeographic model and offline-derived masks/intermediates with
+item-level provenance where required. Early Earth is explicitly
+conceptual. Mask/SDF interpolation is illustrative, not plate physics.
+Do not claim exact ancient coastlines, a climate model or live imagery.
 
-VISUAL EXECUTION
-Establish full desktop and mobile visual targets at TR-004, then
-implement from them. Generated concepts are not app screenshots and
-are not scientific texture data. Keep Earth dominant, chrome quiet,
-controls readable and motion purposeful. Open the actual app and
-inspect screenshots after each visual milestone. Compare composition,
-orientation, lighting, atmosphere, typography, spacing, icons and
-mobile behavior. Fix material mismatches; a green build alone does
-not establish visual quality. Do not claim user approval that did not
-occur, or claim X-video fidelity without inspecting it.
+Modern global city lights are forbidden before present-day contexts.
+C17 is local Pearl Street lighting; global night imagery belongs to C18
+and Planet Today. Rewinding removes future sites and forbidden lights.
+Footprints/routes are illustrative story geography, not population or
+political borders. Verify historical claims, dates and coordinates using
+exact primary/site-authority sources and write concise original text.
 
-ASSETS AND PERFORMANCE
-Use permitted locally bundled assets with exact source/credit/terms,
-observation period, dimensions, SHA-256 and reproducible transforms.
-Use a preview first and progressively upgrade quality. Respect DPR,
-texture-memory and initial-load budgets. Distinguish historical
-composites, derived sunlight and artistic effects in the UI/credits.
-No NASA branding or endorsement implication. Manage texture/material/
-geometry/worker lifetimes and test repeated quality/remount cycles.
-Profile before adding workers or expensive postprocessing. Do not
-label headless software-rendering results as real hardware FPS.
+Finish every primary control: orbit, plus/minus zoom, timeline seeking,
+Play/Pause, 1x/2x/5x, chapter previous/next, All chapters, section tabs,
+appearance presets, contextual Sources, reset and help. Mobile/open
+panel designs are Terra-specific completions because they are not
+shown in the recording. Make them useful, accessible and visually
+consistent. Preserve browser/page scrolling and zoom outside the
+owned stage gesture. Provide reduced-motion and keyboard paths.
 
-EXECUTION LOOP
-Inspect git status and the current repository before edits. Preserve
-user changes and work in a normal Terra task branch/worktree. Do not
-change other repositories, global .codex, shell profiles, credentials
-or global toolchains. Never force-push.
+Work through dependency-ready tasks in small coherent commits.
+Start with assets/contracts, the real opening globe and geological
+feasibility, not days of decorative UI. Parallelize isolated content,
+rendering and tests only after contracts stabilize, using separate
+worktrees with one integration owner. Preserve user changes and do
+not touch other repos or global configuration. Maintain actual status,
+commands, commits, screenshots and blockers in docs/PROGRESS.md.
 
-For every task: read its dependencies and acceptance criteria;
-implement a coherent slice; run relevant unit/browser/visual checks;
-fix failures; update docs/PROGRESS.md with actual evidence; check off
-the task only when it passes; then commit with the task ID. Continue
-to the next core task. Keep milestone issues synchronized if GitHub
-access is available. Do not treat writing documentation as proof that
-application work is done.
+Implement and run meaningful lint/type/unit/content/asset/docs/build
+checks and production-build Playwright tests. Inspect the actual app
+at 1440x900, 1280x800 and 390x844 at minimum. Compare opening,
+formation, ice, Pangea, Civilization intro, regional chapters, local
+lighting and the night finale to the recording checkpoints. Test all
+ten anchors and eighteen chapters, reverse/random seeks, camera
+interruption, stale requests, quality changes, hidden tabs, reduced
+motion, asset failure, context loss and far-side label occlusion.
+Passing TypeScript alone is not completion. Fix material visual drift.
 
-Parallelize only isolated domains after contracts are stable. Assign
-separate worktrees/file ownership to math, UI and tests. One owner
-integrates scene/materials/shared state. Do not race on lockfiles,
-shared contracts or the same scene root. Re-run integration checks
-after merging.
+Treat 60 fps as a measured target on named real hardware, not a
+claim inferred from the recording. Use progressive loading, bounded
+texture residency, sensible quality tiers, no per-frame React rerenders
+and explicit GPU resource disposal. Do not use software-rendering CI
+as proof of laptop/mobile GPU performance.
 
-VERIFICATION
-Implement and run pnpm lint, pnpm typecheck, pnpm test:unit,
-pnpm assets:verify, pnpm docs:check, pnpm build and pnpm test:e2e.
-pnpm check must run real checks and fail honestly. Test the built
-preview with /terra/ base, not only the dev server. Test a real
-WebGL scene, shader errors, nonblank output, time/selection/lab,
-share links, tours, export, keyboard/mobile and failure recovery.
-Use deterministic time, seed, camera, quality and a real scene-ready
-signal. Do not disable failing tests, approve bad snapshots or
-invent outputs to satisfy the goal.
+Finish with an accurate portfolio README and engineering case study,
+actual Terra screenshots and a short captured demo, all source/asset
+credits, CI and a static deployment under /terra/. Verify the real public
+URL and assets before claiming deployment. If permissions block it,
+record the exact blocker and reproducible build evidence rather than
+inventing a live link or checking off the blocked task.
 
-DEPLOYMENT AND PORTFOLIO
-Prefer an authorized static deployment to GitHub Pages under /terra/.
-Verify the actual public URL, texture/decoder paths and scene-link
-reloads before calling it deployed. If settings or permissions block
-publication, report that precise blocker and provide the build and
-runbook; never fabricate a URL or claim local preview is production.
-Publish only real application screenshots and a real demo clip.
-Write a clear README/case study explaining the difficult engineering
-choices, measured results, sources and limitations. Keep external
-asset licenses separate from the proposed MIT original-code license.
-Do not purchase services or change account permissions without
-explicit authorization.
-
-STOP CONDITION AND HANDOFF
-The target is all core acceptance criteria passing, no material visual
-blockers, tested clean-clone setup, traceable assets and honest release
-evidence. Optional features are not a reason to delay this.
-Report what actually shipped, exact checks/results, browser/device
-coverage, media locations, verified deployment status and remaining
-limitations. Distinguish Terra-spec completion from source-video
-fidelity. A genuinely blocked deployment or unavailable hardware test
-must remain blocked/unverified, not be relabeled done. Continue all
-other dependency-ready work rather than stopping at the first external
-limitation. Leave a precise next action for each real blocker.
+Do not stop at another roadmap, scaffold, shader demo or five sample
+chapters. Finish the core experience, verify it, and report actual shipped
+behavior, tests, visual comparisons, measured performance, deployment
+status and remaining limitations. Do not fabricate source access,
+asset rights, scientific precision, benchmarks or completed tests.
 ```
 
-## Suggested handoff structure
+## Completion contract
 
-The implementation handoff should summarize actual core feature coverage, identify the release commit, show the real demo and screenshots, list checks with their results, report performance with device/test conditions, identify outstanding issues and state whether the X reference was eventually inspected. Do not repeat the full planning documents instead of showing the built result.
+All ten Planet and eighteen Civilization states are usable, with both introductions and real controls. Core tests and actual visual comparisons pass. Sources/asset rights are verified; real project media depicts Terra rather than the reference video. Progress checkboxes agree with evidence. A permission-blocked deployment remains an explicit incomplete public release, not an all-done claim.
 
-## Resuming after an interruption
-
-Read `git status`, the latest commits, `PROGRESS.md` and the roadmap checkboxes. Re-run the last milestone's smoke tests before continuing. A chat statement that a task was finished is not sufficient evidence; use code, tests and recorded results. Select the next dependency-ready core task, not a new optional feature.
+Use the roadmap for detailed per-task files, dependencies and acceptance criteria. The raw recording need not be republished; use its local copy for visual review when available and the timestamped analysis for implementation guidance. Original source-code identity is still unknown and is not a prerequisite for an independent reconstruction.

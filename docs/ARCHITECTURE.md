@@ -1,184 +1,137 @@
-# Architecture
+# Terra v2 — implementation architecture
 
-## 1. Chosen architecture
+## 1. Stack and boundaries
 
-One static client application. React owns accessible DOM controls. React Three Fiber owns the Three.js scene lifecycle. Pure TypeScript owns coordinates, time, solar geometry and scene serialization. A small runtime bridge updates GPU uniforms/camera without broadcasting React state each frame.
+One static React + TypeScript + Vite application. Three.js through React Three Fiber renders the globe; narrowly imported Drei helpers may provide controls. Zustand stores low-frequency user intent/bookmarks; a pure reducer and small runtime evaluate narrative state. CSS Modules/tokens style semantic DOM controls. Vitest/Testing Library cover logic and UI, Playwright covers production-build workflows and visual regressions.
 
-This is a proposed stack for Terra, not a claim about the X project's implementation. Verify compatible stable dependency versions during TR-010 and record them in the lockfile and toolchain documentation.
+This is Terra's chosen implementation, **not confirmation of the original website's stack**. The official R3F repository describes its React/Three.js integration: https://github.com/pmndrs/react-three-fiber . Verify compatible stable versions during bootstrap; pin the runtime, package manager and lockfile. Do not guess that independently choosing the latest React and R3F majors is compatible.
 
-| Concern | Default | Reason / boundary |
-| --- | --- | --- |
-| UI/build | React + strict TypeScript + Vite | Client-only interactive product; no SSR requirement |
-| Graphics | Three.js + React Three Fiber | Programmable materials with React lifecycle integration |
-| Helpers | Narrow Drei imports | Reuse proven controls/helpers without importing a whole demo stack |
-| Rendering API | WebGL2 + GLSL | One supported baseline; WebGPU is deferred |
-| State | Zustand + local React state | Low-frequency user intent; no per-frame store churn |
-| Astronomy | Astronomy Engine adapter | Defined coordinate/time API instead of ad hoc Sun animation |
-| UI styling | CSS Modules + tokens | Small explicit design system, no heavy component library requirement |
-| Testing | Vitest + Testing Library + Playwright | Pure math, DOM interaction, real browser integration |
-| Deployment | Static `dist`, Pages base `/terra/` | No server or runtime key required |
+Use WebGL2 as the baseline. Current Three.js WebGLRenderer documents that API: https://threejs.org/docs/pages/WebGLRenderer.html . Provide an accessible poster/story-reader fallback, not a promised WebGL1 renderer. No backend, SSR requirement, paid API, live geodata request, account, database, Temporal, AI service or monorepo is needed. Offline asset preparation may use Python/GPlates without making them runtime dependencies.
 
-Three.js's documented WebGLRenderer uses WebGL2; do not promise WebGL1 fallback. Source: https://threejs.org/docs/pages/WebGLRenderer.html . A static poster/accessible information surface is the fallback when rendering is unavailable.
-
-## 2. Data flow
-
-```mermaid
-flowchart LR
-  Controls[Accessible React controls] --> Intent[Validated application intent]
-  Intent --> Store[Low-frequency scene store]
-  Store --> Runtime[Simulation runtime and camera director]
-  Runtime --> Math[Pure coordinates and solar models]
-  Math --> Snapshot[Simulation snapshot]
-  Snapshot --> GPU[Material uniforms and scene objects]
-  Snapshot --> Readouts[Throttled inspector readouts]
-  Assets[Verified local asset manifest] --> Loader[Progressive asset manager]
-  Loader --> GPU
-  URL[Versioned scene URL] --> Validate[Schema validation]
-  Validate --> Store
-  GPU --> Canvas[WebGL2 canvas]
-```
-
-```mermaid
-flowchart TD
-  App --> AppShell
-  AppShell --> TopBar
-  AppShell --> ExplorePanel
-  AppShell --> Inspector
-  AppShell --> Timeline
-  AppShell --> Dialogs
-  AppShell --> SceneCanvas
-  SceneCanvas --> EarthSurface
-  SceneCanvas --> Clouds
-  SceneCanvas --> Atmosphere
-  SceneCanvas --> Stars
-  SceneCanvas --> GeoOverlays
-  SceneCanvas --> CameraDirector
-  SceneCanvas --> SimulationBridge
-```
-
-## 3. File ownership and intended tree
+## 2. Proposed module tree
 
 ```text
 src/
-  app/                 App.tsx, AppShell.tsx, providers.tsx
-  components/ui/       Button, Slider, Dialog, Toggle, Tooltip
-  features/explore/    search, place list, selected-place inspector
-  features/timeline/   UTC controls, speed, scrubber
-  features/lab/        lab controls, sunlight curve, explanation
-  features/showcase/   tour, photo mode, presets, scene sharing
-  features/settings/   quality, layers, help, credits
-  scene/               SceneCanvas, EarthSurface, Clouds, Atmosphere, Stars
-  scene/camera/        CameraDirector, orbit integration, fly-to math
-  scene/materials/     surface/atmosphere/cloud shaders and typed uniforms
-  scene/layers/        markers, graticule, selection
-  simulation/          clock, coordinates, sun-provider, lab-model, sunlight
-  state/               schema, scene-store, preferences, serialization
-  assets/              manifest types, manager, quality tier selection
-  data/                places, presets, tour
+  app/                 App.tsx, AppShell.tsx, route-state.ts
+  components/ui/       Button, SegmentedControl, Dialog, Slider, Tooltip
+  features/planet/     PlanetIntro, PlanetNarrative, GeologicalTimeline
+  features/civilization/ CivilizationIntro, ChapterNarrative, ChapterTimeline
+  features/story/      TransportControls, SpeedMenu, ChapterDrawer
+  features/sources/    SourcesDrawer, ChapterSources, Credits
+  features/settings/   QualityMenu, Help, ShareScene
+  story/               types, schema, reducer, transport, derive-scene
+  story/               geological-mapping, date-formatting, serialization
+  scene/               GlobeCanvas, Surface, Clouds, Atmosphere, Space
+  scene/materials/     modern-earth, paleo-surface, early-earth, atmosphere
+  scene/camera/        CameraDirector, frame-composition, spherical-path
+  scene/overlays/      CurrentRegions, EarlierSites, Labels, StoryRoutes
+  geo/                 coordinates, occlusion, route-math
+  assets/              manifest-schema, manager, residency-cache, quality
+  data/                planet-anchors, civilization-chapters, sources, camera-presets
   styles/              tokens.css, global.css
-  test/                fixtures, deterministic clock, test-only bridge
-public/
-  assets/earth/        verified texture derivatives only
-  assets/fallback/     real rendered fallback poster after implementation
-  basis/               matching local KTX2 transcoder files if used
-scripts/               asset verification, docs checks, evidence utilities
-tests/
-  unit/                numeric and state tests
-  e2e/                 browser workflows and failure tests
-  visual/              controlled visual baseline specifications
-  fixtures/            independently sourced numerical fixtures
-  evidence/            small curated reports, not raw browser dumps
-docs/                  specifications, decisions, progress and final case study
+public/assets/         verified optimized runtime assets only
+scripts/assets/       acquisition, reconstruction, rasterization, compression, verification
+scripts/               content verification, documentation checks
+ tests/                unit, component, e2e, visual fixtures
+ docs/                 specifications and curated implementation evidence
 ```
 
-Do not create all folders as empty ceremony. Add modules when their task needs them. Keep `App.tsx` as composition, not a 2,000-line component. Imported shaders should be ordinary text/source modules supported by the chosen Vite setup; avoid unnecessary shader-loader plugins.
+The leading space before `tests/` in this illustrative tree has no semantic meaning; use the normal root `tests/` folder. Add modules when needed, not dozens of empty placeholder directories. Keep App.tsx as composition glue. Renderer/material ownership must not be spread across unrelated global effects.
 
-## 4. State and runtime contracts
+## 3. Data flow
+
+```mermaid
+flowchart LR
+  DOM[DOM controls and accessible timelines] --> Actions[Validated story actions]
+  Actions --> State[Reducer and low-frequency store]
+  State --> Clock[Monotonic story runtime]
+  Data[10 Planet keys and 18 human chapters] --> Derive[Pure deriveScene]
+  Clock --> Derive
+  Derive --> View[Text, date, rail and overlay model]
+  Derive --> Assets[Generation-aware asset manager]
+  Assets --> GPU[Shaders and scene objects]
+  Derive --> Camera[Single-owner camera director]
+  Camera --> GPU
+  View --> DOM
+  Sources[Reviewed sources and asset manifest] --> DOM
+```
+
+A single renderer is reused across section switches. Do not remount a new WebGL context for every chapter. Scene state is not a collection of independent `setInterval` callbacks. Assets and numerical mappings remain testable without a browser.
+
+## 4. Domain contracts
 
 ```ts
-type Vec3 = readonly [number, number, number];
+type Section = 'planet' | 'civilization';
+type Appearance = 'natural' | 'after-dark' | 'blue-hour';
+type TransportStatus = 'intro' | 'paused' | 'playing' | 'scrubbing' | 'buffering' | 'complete';
 type Quality = 'low' | 'medium' | 'high';
-type LayerId = 'clouds' | 'atmosphere' | 'nightLights' | 'graticule' | 'places';
+type CameraPose = { latitudeDeg: number; longitudeDeg: number; distanceR: number };
 
-type EarthConfig = {
-  mode: 'earth';
-  epochMs: number;
-  playing: boolean;
-  speed: 1 | 60 | 3600;
+type StoryLocation =
+  | { section: 'planet'; position: number; intro: boolean }
+  | { section: 'civilization'; chapterId: string | null; localProgress: number; intro: boolean };
+
+type StoryState = {
+  version: 2;
+  location: StoryLocation;
+  status: TransportStatus;
+  speed: 1 | 2 | 5;
+  appearance: Appearance;
+  camera: CameraPose;
+  cameraOwner: 'user' | 'chapter' | 'reset';
+  overlays: { currentRegions: boolean; earlierSites: boolean };
+  openPanel: null | 'chapters' | 'sources' | 'settings';
 };
 
-type LabConfig = {
-  mode: 'lab';
-  elapsedSimMs: number;
-  playing: boolean;
-  speed: 1 | 60 | 3600;
-  axialTiltDeg: number;
-  seasonAngleDeg: number;
-  solarDayHours: number;
-  initialSubsolarLongitudeDeg: number;
-};
-
-type SceneConfig = {
-  schemaVersion: 1;
-  simulation: EarthConfig | LabConfig;
-  camera: { latitudeDeg: number; longitudeDeg: number; distanceR: number };
-  layers: Record<LayerId, boolean>;
-  selectedPlaceId: string | null;
-  selectedPoint: { latitudeDeg: number; longitudeDeg: number } | null;
-};
-
-type SimulationSnapshot = {
-  mode: 'earth' | 'lab';
-  evaluatedTimeMs: number;
-  sunDirectionEarthFixed: Vec3;
-  subsolarLatitudeDeg: number;
-  subsolarLongitudeDeg: number;
-  cloudPhase: number;
+type SceneProjection = {
+  revision: number;
+  narrativeId: string;
+  displayDate: string;
+  assetKeys: readonly string[];
+  blend: number;
+  cameraTarget: CameraPose;
+  visibleOverlayIds: readonly string[];
+  allowModernCityEmission: boolean;
+  interpretation: 'conceptual' | 'model-informed' | 'modern-reference';
 };
 ```
 
-These are domain contracts, not a guarantee of exact third-party signatures. Validate all external scene data with a versioned schema. Use finite-number checks, enum validation, bounded strings and a small payload cap. Store preferences separately from scene content. Do not serialize renderer objects, materials, dates as locale strings, functions, or arbitrary URLs.
+Refine these contracts consistently when coding, using discriminated unions to reject impossible mode/appearance combinations. Stable chapter IDs come from the catalogue; no free-form remotely supplied URLs. Preferences and per-section bookmarks live outside a shared scene's serialized domain. Validate all imports with finite/bounded numbers, known enums/IDs and a small size cap.
 
-The runtime stores an anchor simulation value and monotonic real-time anchor. On pause, seek, speed change or mode switch, evaluate the old state first, then re-anchor. Readouts can update at 4–10Hz; the GPU and camera can update each frame. Avoid creating vectors, arrays, materials or closures repeatedly in hot loops when reuse is straightforward.
+## 5. Rendering layers
 
-## 5. Rendering and coordinate ownership
+Surface: aligned day/albedo, optional roughness/ocean mask, historical night emission, or two era-correct paleogeographic masks and procedural appearance parameters. Early Earth uses a separate conceptual material. Clouds and atmosphere use thin separate shells with correct depth order. Decorative space is minimal. Surface labels/routes/regions use a common coordinate frame and Earth occlusion.
 
-Use the Earth-fixed coordinate contract in `SIMULATION_SPEC.md` everywhere. The Earth mesh stays fixed in Earth mode while Sun direction changes with epoch. Optional auto-orbit rotates the camera only. Do not rotate both the planet and Sun to account for the same physical day.
+Keep color textures in sRGB and masks/normal/roughness/SDF data non-color. Perform blending/lighting in the appropriate linear working space and apply tone mapping/output conversion once. Custom ShaderMaterial needs explicit output handling; the official guide documents the relevant shader conversion: https://threejs.org/manual/en/color-management.html . Do not combine a baked night-Earth RGB photograph with emission as if all its dark land pixels were city lights; choose/derive an emission signal with documented treatment and visual checks.
 
-Surface material inputs: aligned day albedo, night emission, optional ocean mask/roughness/normal maps, Sun vector and controlled appearance constants. Clouds use their own shell/material and the same light direction. The atmospheric shell is independent. Stars are a seeded point cloud with no physical sky claim.
+Physical atmosphere integration, global illumination, DOF and complex postprocessing are not necessary for the reference effect. Prefer an inspectable small shader with restrained parameters. Add optional selective bloom only after the base material passes and the performance impact is measured.
 
-Color textures require correct sRGB interpretation; scalar data maps remain non-color. Perform lighting in linear space and apply tone mapping/output conversion once. Custom ShaderMaterial output must follow the selected Three.js version's supported color/tone-mapping chunks or an explicitly tested equivalent. Avoid double-gamma correction. Source: https://threejs.org/manual/en/color-management.html .
+## 6. Frame loop and animation
 
-Do not make optional bloom the source of the underlying day/night effect. First produce a strong scene with surface/cloud/atmosphere materials alone. Postprocessing is allowed only if its visual gain survives measurement and lower tiers can disable it cleanly.
+The frame loop evaluates the anchored runtime, updates reusable uniforms/objects and advances the single active camera owner. React rerenders on chapter/control changes, not every animation frame. Update visible continuously changing geological age at a bounded rate; animation remains smooth without forcing the entire app to rerender at 60Hz.
 
-## 6. Asset lifecycle
+Opening a panel, manual interaction, section switch, visibility loss or a required asset wait pauses/re-anchors transport. Avoid per-frame allocation of materials/textures/vectors. Derive overlays from the selected chapter rather than incrementally mutating a permanent visited-sites set that cannot rewind correctly.
 
-Render a low-resolution complete Earth before loading high-resolution upgrades. An asset manager owns progress, deduplicated requests, cancellation, active quality tier, and references to shared GPU resources. Keep old textures alive until their replacements are uploaded and renderable, then release the old tier when no consumers remain.
+Default camera presets are data-driven and must be checked visually per chapter. A projection offset frames the globe beside the text; do not alter geographic coordinates to move it into the right side of the screen. Explicitly test that pointer picking/orbit math still matches the rendered viewport after resizing and responsive changes.
 
-KTX2 is a candidate production format. If used, ship the matching transcoder locally, call renderer capability detection before loading, bound worker count, and provide a tested ordinary-image fallback. See https://threejs.org/docs/pages/KTX2Loader.html . File compression and GPU residency are separate budgets.
+## 7. Asset ownership and quality
 
-Every geometry, material, texture, render target, event listener and loader worker needs an owner and teardown path. Three.js resources are not all reclaimed just because a component disappears. See https://threejs.org/manual/en/how-to-dispose-of-objects.html . Test remounts, quality switches and context recovery rather than relying on a single happy-path load.
+The manager handles request deduplication, current revision, cancellation, prefetch, fallback and residency. GPU readiness means successful upload and at least one render with the intended asset set, not merely completion of HTTP requests. Expose a test-only `sceneReady(revision)` signal for deterministic screenshots; exclude debug mutation APIs from production.
 
-## 7. Camera controller arbitration
+Begin with a complete era-correct preview, not a blank sphere waiting for every high-quality key. At a random seek, commit text/date/scene consistently once the required low-resolution set is ready. Discard stale completion callbacks. Keep a bounded adjacent-key cache and dispose evicted textures/materials/render targets when no consumers own them.
 
-Exactly one controller owns the camera at a time: `orbit`, `flyTo`, `tour` or `photoOrbit`. A transition acquires ownership, disables conflicting controls, and releases cleanly on completion/cancellation. Pointer/wheel/manual keyboard input cancels programmatic motion before applying the new input.
+KTX2 is optional if it improves measured delivery/residency. Its loader requires renderer capability detection and matching transcoder assets; keep those local and cap worker count. Source: https://threejs.org/docs/pages/KTX2Loader.html . Ordinary-image fallbacks must fit the same memory budget; compressed download size is not GPU-memory size.
 
-Interpolate unit directions on the sphere and radial distance separately. Handle nearly parallel and antipodal directions explicitly. Recompute a stable up vector or use a constrained look-at with pole clamps. A panel resize changes viewport/aspect, not geographic position.
+## 8. Worker and offline policy
 
-## 8. Worker strategy
+Do not build a backend service to generate ancient Earth at runtime. Fetch/prepare permitted model data offline into reproducible, checksummed runtime derivatives. Pygplates or equivalent can be a documented development-only preparation step. Runtime uses compact masks/textures and chapter data. A worker is justified for expensive decode/preparation only after profiling; do not move all rendering into OffscreenCanvas by default.
 
-The core ephemeris and a 361-sample daily curve should first be profiled on the main thread with caching. Add a dedicated worker only if repeated sampling causes measurable interaction stalls. A worker request must include a monotonic request ID and the exact model input; stale replies must be dropped, errors surfaced, and pending work terminated on mode change/unmount. Transfer typed arrays where useful; avoid copying large arrays per frame.
+## 9. Static deployment and security
 
-Do not move the whole renderer to OffscreenCanvas in the core release. It complicates interaction, debugging and browser support without being justified by the current scope.
+Build for GitHub Pages base `/terra/`, with `/` configurable for other hosts. All local asset/transcoder paths derive from the Vite base. Store scene state in a versioned hash or a similarly static-host-safe URL; unknown versions recover to the intro with a message. Browser back/forward and copied scene URLs must not create network requests to arbitrary user-controlled hosts.
 
-## 9. Persistence, URLs and security
+No secret, API key, user identifier, analytics or location permission is needed. Use same-origin runtime assets and ordinary source links. Do not add environment placeholders for nonexistent services. Configure Pages only through authorized repository settings; public availability is a separate verified release result. Vite's official deployment guide explains base/output behavior: https://vite.dev/guide/static-deploy.html .
 
-Precedence: explicit URL scene → curated showcase; local preferences independently apply. Saved scene restoration is explicit. Hash-based state avoids static-host routing problems and does not require a server; keep it versioned and bounded. Support unknown/corrupt versions with a recoverable warning and the default scene.
+## 10. Verification ownership
 
-Only allow known place/preset IDs and known model parameters. Do not resolve arbitrary remote texture URLs from a shared link. No secrets, user-identifying data or analytics are needed. Data and assets used by the core app are same-origin and credited.
-
-## 10. Deployment boundaries
-
-The app must work both at `/terra/` and at `/` when configured appropriately. Asset URLs must use the build base rather than hardcoded root paths. Test the real `dist` build, not just Vite's development server. The Pages workflow is implementation work; it requires appropriate repository settings/permissions. Record success only after the public site and its assets are actually checked.
-
-The Vite deployment guide documents static output and Pages base handling: https://vite.dev/guide/static-deploy.html . Read current guidance at implementation time before fixing workflow versions. Do not add environment variables for services the app does not use.
+Pure logic owner: mapping, dates, transport, validation and overlay membership. Rendering owner: geometry/materials/assets and GPU lifecycle. Interface owner: narrative shell, panels, input routing/accessibility. One integrator owns shared contracts, camera director and lockfile. Parallel agents need separate worktrees and nonoverlapping file assignments. Merge small changes and rerun the complete browser journey frequently.
