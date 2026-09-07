@@ -2,6 +2,8 @@
 
 The current project is a recording-inspired cinematic Earth/history website: **ten Planet anchors and eighteen Civilization chapters**. The earlier observatory/sunlight-lab plan is retired. Active task IDs are **TE-001–TE-072**. The app is not implemented by this planning revision.
 
+**Execution tracking:** [master issue #12](https://github.com/jdavis-software/terra/issues/12) and the [nine-epic issue map](ISSUE_INDEX.md).
+
 ## Reading order
 
 For implementation: [AGENTS](../AGENTS.md) → [ASTRA goal](ASTRA_GOAL.md) → [recording analysis](REFERENCE_ANALYSIS.md) → [product](PRODUCT_SPEC.md) / [visuals](VISUAL_SPEC.md) / [story catalogue](STORY_CONTENT.md) → [story engine](SIMULATION_SPEC.md) / [architecture](ARCHITECTURE.md) / [assets](ASSETS_AND_SOURCES.md) → [roadmap](ROADMAP.md) / [QA](QA_AND_RELEASE.md) → [progress](PROGRESS.md).
@@ -17,6 +19,7 @@ For implementation: [AGENTS](../AGENTS.md) → [ASTRA goal](ASTRA_GOAL.md) → [
 | Stack, module boundaries and resource ownership | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Acquisition, model limits, licensing and provenance | [ASSETS_AND_SOURCES.md](ASSETS_AND_SOURCES.md) |
 | Canonical task IDs/dependencies/acceptance | [ROADMAP.md](ROADMAP.md) |
+| GitHub epic and master-tracker navigation | [ISSUE_INDEX.md](ISSUE_INDEX.md) |
 | Cross-cutting tests, performance and release gates | [QA_AND_RELEASE.md](QA_AND_RELEASE.md) |
 | Why defaults changed and when to reconsider them | [DECISIONS.md](DECISIONS.md) |
 | Actual implementation and verification status | [PROGRESS.md](PROGRESS.md) |
